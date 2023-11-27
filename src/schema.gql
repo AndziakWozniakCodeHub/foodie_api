@@ -1,0 +1,65 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type User {
+  """a unique identifier"""
+  id: ID!
+  role: Role!
+  username: String!
+  email: String!
+  password: String!
+}
+
+enum Role {
+  Regular
+  Admin
+}
+
+type Meal {
+  """a unique identifier"""
+  id: ID!
+  name: String!
+  price: Float!
+  type: String!
+}
+
+type Query {
+  users: [User!]!
+  user(id: ID!): User!
+  meals: [Meal!]!
+  meal(id: ID!): Meal!
+}
+
+type Mutation {
+  createUser(createUserInput: CreateUserInput!): User!
+  updateUser(id: Float!, updateUserInput: UpdateUserInput!): User!
+  removeUser(id: ID!): User!
+  createMeal(createMealInput: CreateMealInput!): Meal!
+  updateMeal(id: Float!, updateMealInput: UpdateMealInput!): Meal!
+  removeMeal(id: ID!): Meal!
+}
+
+input CreateUserInput {
+  username: String!
+  email: String!
+  password: String!
+}
+
+input UpdateUserInput {
+  username: String
+  email: String
+  password: String
+}
+
+input CreateMealInput {
+  name: String!
+  price: Float!
+  type: String!
+}
+
+input UpdateMealInput {
+  name: String
+  price: Float
+  type: String
+}
