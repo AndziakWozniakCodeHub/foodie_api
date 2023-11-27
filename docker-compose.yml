@@ -1,11 +1,40 @@
 services:
-  db:
+  api:
+    restart: always
+    build:
+      dockerfile: Dockerfile
+      context: .
+      target: development
+    volumes:
+      - .:/usr/src/app
+    env_file:
+    - .env
+    command: npm run start:dev
+    ports:
+      - 3000:3000
+    depends_on:
+      - postgres
+
+  postgres:
     image: postgres
     restart: always
     ports:
       - "5435:5432"
     environment:
-      POSTGRES_PASSWORD: pass123
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    container_name: pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - '5050:80'
+    depends_on:
+      - postgres
+  
   redis:
     image: redis
     ports:

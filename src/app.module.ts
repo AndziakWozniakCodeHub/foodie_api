@@ -22,6 +22,7 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     DatabaseModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
+      playground: true,
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
