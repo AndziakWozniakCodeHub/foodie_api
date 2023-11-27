@@ -22,7 +22,6 @@ import { APP_GUARD } from '@nestjs/core';
     }),
     DatabaseModule,
     GraphQLModule.forRoot<ApolloDriverConfig>({
-      playground: true,
       driver: ApolloDriver,
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
     }),
@@ -41,10 +40,10 @@ import { APP_GUARD } from '@nestjs/core';
   controllers: [AppController],
   providers: [
     AppService,
-    // {
-    //   provide: APP_GUARD,
-    //   useClass: ThrottlerGuard,
-    // },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
+    },
   ],
 })
 export class AppModule {}
