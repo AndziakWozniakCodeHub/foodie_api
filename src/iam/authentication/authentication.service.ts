@@ -3,6 +3,7 @@ import {
   Inject,
   Injectable,
   UnauthorizedException,
+  ForbiddenException,
 } from '@nestjs/common';
 import { User } from '../../users/entities/user.entity';
 import { HashingService } from '../hashing/hashing.service';
@@ -18,6 +19,7 @@ import { RefreshTokenIdsStorage } from './refresh-token-ids.storage/refresh-toke
 import { InvalidatedRefreshTokenError } from './refresh-token-ids.storage/Error/InvalidateRefreshTokenError';
 import { ActiveUserData } from './interfaces/active-user-data.interface';
 import { RefreshTokenPayload } from './interfaces/refresh-token-payload.interface';
+import { MailingService } from '../../mailing/mailing.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -28,6 +30,7 @@ export class AuthenticationService {
     @Inject(jwtConfig.KEY)
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
+    private readonly mailingService: MailingService,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -38,6 +41,10 @@ export class AuthenticationService {
       user.password = await this.hashingService.hash(signUpDto.password);
 
       await this.userService.create(user);
+      await this.mailingService.sendMailWelcomeEmailConfirmation(
+        user.username,
+        user.email,
+      );
     } catch (err) {
       const pgUniqueViolationErrorCode = '23505';
       if (err.code === pgUniqueViolationErrorCode) {
@@ -59,6 +66,11 @@ export class AuthenticationService {
     if (!isEqual) {
       throw new UnauthorizedException('Password does not match');
     }
+
+    if (!user.isEmailConfirmed) {
+      throw new ForbiddenException(`Confirm your email first`);
+    }
+
     return await this.generateTokens(user);
   }
 

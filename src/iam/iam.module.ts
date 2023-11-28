@@ -13,11 +13,13 @@ import { AuthenticationGuard } from './authentication/guards/authentication/auth
 import { RedisModule } from '../redis/redis.module';
 import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.storage/refresh-token-ids.storage';
 import { RolesGuard } from './authorization/guards/roles/roles.guard';
+import { MailingModule } from '../mailing/mailing.module';
 
 @Module({
   imports: [
     UsersModule,
     RedisModule,
+    MailingModule,
     JwtModule.registerAsync(jwtConfig.asProvider()),
     ConfigModule.forFeature(jwtConfig),
   ],

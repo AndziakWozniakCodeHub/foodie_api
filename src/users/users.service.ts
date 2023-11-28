@@ -50,4 +50,13 @@ export class UsersService {
     const user = await this.userRepository.findOneBy({ email });
     return user;
   }
+
+  async markEmailAsConfirmed(email: string) {
+    return this.userRepository.update(
+      { email },
+      {
+        isEmailConfirmed: true,
+      },
+    );
+  }
 }

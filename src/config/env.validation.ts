@@ -56,6 +56,27 @@ class EnvironmentVariables {
   @IsString()
   @MinLength(3)
   REDIS_PASSWORD: string;
+
+  // MAILER
+  @IsString()
+  @MinLength(3)
+  MAIL_HOST: string;
+
+  @IsString()
+  @MinLength(3)
+  SMTP_USERNAME: string;
+
+  @IsString()
+  @MinLength(3)
+  SMTP_PASSWORD: string;
+
+  // MAILE/JWT
+  @IsString()
+  @MinLength(3)
+  JWT_VERIFICATION_EMAIL_TOKEN_SECRET: string;
+
+  @IsNumber()
+  JWT_VERIFICATION_EMAIL_TOKEN_EXPIRATION_TTL: number;
 }
 
 export function validate(config: Record<string, unknown>) {

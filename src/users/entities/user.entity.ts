@@ -21,4 +21,7 @@ export class User {
   @Column({ enum: Role, default: Role.Regular })
   @Field(() => Role)
   role: Role;
+
+  @Column({ default: false })
+  isEmailConfirmed: boolean;
 }

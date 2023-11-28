@@ -14,6 +14,7 @@ import { RedisModule } from './redis/redis.module';
 import { HealthModule } from './health/health.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
+import { MailingModule } from './mailing/mailing.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { APP_GUARD } from '@nestjs/core';
     IamModule,
     RedisModule,
     HealthModule,
+    MailingModule,
   ],
   controllers: [AppController],
   providers: [
