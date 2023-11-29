@@ -8,6 +8,7 @@ import { RefreshTokenDto } from './dto/refresh-token.dto';
 import { ApiBearerAuth } from '@nestjs/swagger';
 import { ActiveUser } from './decorators/active-user.decorator';
 import { ActiveUserData } from './interfaces/active-user-data.interface';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Auth(AuthType.None)
 @Controller('authentication')
@@ -31,10 +32,17 @@ export class AuthenticationController {
   }
 
   @ApiBearerAuth('JWT-auth')
+  @HttpCode(HttpStatus.OK)
   @Auth(AuthType.Bearer)
   @Post('logout')
   async logout(@ActiveUser() user: ActiveUserData) {
     console.log(user);
     await this.authService.logout(user.sub);
+  }
+
+  @HttpCode(HttpStatus.OK)
+  @Post('reset-password')
+  async resetPassword(@Body() resetPasswordData: ResetPasswordDto) {
+    await this.authService.resetPassword(resetPasswordData);
   }
 }

@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
 import { ConfirmEmailDto } from './dto/confirmEmail.dto';
 import { EmailConfirmationService } from './email-confirmation.service';
 import { ResendConfirmationDto } from './dto/resendConfirmation.dto';
@@ -11,6 +11,8 @@ export class EmailConfirmationController {
   constructor(
     private readonly emailConfirmationService: EmailConfirmationService,
   ) {}
+
+  @HttpCode(HttpStatus.OK)
   @Post('confirm')
   async confirm(@Body() confirmationData: ConfirmEmailDto) {
     const email = await this.emailConfirmationService.decodeConfirmationToken(
@@ -19,6 +21,7 @@ export class EmailConfirmationController {
     await this.emailConfirmationService.confirmEmail(email);
   }
 
+  @HttpCode(HttpStatus.OK)
   @Post('resend-confirmation-link')
   async resendConfirmationLink(@Body() emailData: ResendConfirmationDto) {
     await this.emailConfirmationService.resendConfirmationLink(emailData.email);

@@ -4,6 +4,7 @@ import {
   Injectable,
   UnauthorizedException,
   ForbiddenException,
+  BadRequestException,
 } from '@nestjs/common';
 import { User } from '../../users/entities/user.entity';
 import { HashingService } from '../hashing/hashing.service';
@@ -20,6 +21,8 @@ import { InvalidatedRefreshTokenError } from './refresh-token-ids.storage/Error/
 import { ActiveUserData } from './interfaces/active-user-data.interface';
 import { RefreshTokenPayload } from './interfaces/refresh-token-payload.interface';
 import { MailingService } from '../../mailing/mailing.service';
+import { EmailConfirmationService } from '../../mailing/email-confirmation/email-confirmation.service';
+import { ResetPasswordDto } from './dto/reset-password.dto';
 
 @Injectable()
 export class AuthenticationService {
@@ -31,6 +34,7 @@ export class AuthenticationService {
     private readonly jwtConfiguration: ConfigType<typeof jwtConfig>,
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
     private readonly mailingService: MailingService,
+    private readonly emailConfirmationService: EmailConfirmationService,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -133,6 +137,20 @@ export class AuthenticationService {
       }
       throw new UnauthorizedException();
     }
+  }
+
+  async resetPassword(resetPasswordData: ResetPasswordDto) {
+    const email = await this.emailConfirmationService.decodeConfirmationToken(
+      resetPasswordData.token,
+    );
+    const user = await this.userService.findOneByEmail(email);
+    if (!user) {
+      throw new BadRequestException(`User ${email} does not exist`);
+    }
+    const hashPassword = await this.hashingService.hash(
+      resetPasswordData.password,
+    );
+    await this.userService.resetPassword(email, hashPassword);
   }
 
   private async signToken<T>(userId: number, expiresIn: number, payload?: T) {

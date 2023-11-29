@@ -59,4 +59,13 @@ export class UsersService {
       },
     );
   }
+
+  async resetPassword(email: string, password: string) {
+    return this.userRepository.update(
+      { email },
+      {
+        password,
+      },
+    );
+  }
 }

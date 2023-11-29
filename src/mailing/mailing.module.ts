@@ -43,6 +43,6 @@ import { JwtModule } from '@nestjs/jwt';
   ],
   controllers: [MailingController, EmailConfirmationController],
   providers: [MailingService, EmailConfirmationService],
-  exports: [MailingService],
+  exports: [MailingService, EmailConfirmationService],
 })
 export class MailingModule {}
