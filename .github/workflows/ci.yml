@@ -20,5 +20,6 @@ jobs:
       run: |
         ls ${{ github.workspace }}
     - run: cp .env.example .env
+    - run: whoami
     - name: deploy
       run: docker compose up
