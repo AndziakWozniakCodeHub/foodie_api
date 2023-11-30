@@ -4,7 +4,7 @@ import { UpdateMealInput } from './dto/update-meal.input';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Meal } from './entities/meal.entity';
 import { Repository } from 'typeorm';
-import { UserInputError } from '@nestjs/apollo';
+import { UserInputError } from '@nestjs/apollo'; 
 
 @Injectable()
 export class MealsService {
