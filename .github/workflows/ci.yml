@@ -13,5 +13,7 @@ jobs:
     runs-on: self-hosted
 
     steps:
+    - run: echo "It work"
+    - run: ls
     - name: docker compose
       run: docker compose up
