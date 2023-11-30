@@ -1,0 +1,17 @@
+name: deployment
+
+on:
+  push:
+    branches: [ "test" ]
+  pull_request:
+    branches: [ "test" ]
+
+jobs:
+
+  build:
+
+    runs-on: self-hosted
+
+    steps:
+    - name: docker compose
+      run: docker-compose up
