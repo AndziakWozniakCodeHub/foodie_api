@@ -12,6 +12,11 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
+# RUN chown -R node:node /node_modules
+
+
+RUN mkdir -p node_modules/.cache && chmod -R 777 node_modules/.cache
+
 USER node
 
 ###################
