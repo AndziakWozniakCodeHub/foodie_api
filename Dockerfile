@@ -10,7 +10,7 @@ COPY --chown=node:node package*.json ./
 
 RUN npm ci
 
-RUN mkdir -p dist && chmod -R 777 dist
+RUN chmod -R 777 dist
 
 COPY --chown=node:node . .
 
