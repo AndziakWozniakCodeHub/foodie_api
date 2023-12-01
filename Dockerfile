@@ -5,6 +5,8 @@
 FROM node:18 As development
 
 WORKDIR /usr/src/app
+RUN chown node:node ./
+USER node
 
 COPY --chown=node:node package*.json ./
 
