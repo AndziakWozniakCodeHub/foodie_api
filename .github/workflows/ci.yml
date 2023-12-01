@@ -21,5 +21,6 @@ jobs:
         ls ${{ github.workspace }}
     - run: cp .env.example .env
     - run: npm install
+    - run: mkdir dist
     - name: deploy
       run: docker compose up --detach --force-recreate
