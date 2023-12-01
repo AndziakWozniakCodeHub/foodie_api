@@ -4,17 +4,15 @@
 
 FROM node:18 As development
 
-RUN mkdir /user/src/app && chown node:node /usr/src/app
-
 WORKDIR /usr/src/app
-
-USER node
 
 COPY --chown=node:node package*.json ./
 
 RUN npm ci
 
 COPY --chown=node:node . .
+
+USER node
 
 ###################
 # BUILD FOR PRODUCTION
