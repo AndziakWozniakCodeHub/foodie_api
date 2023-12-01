@@ -1,5 +1,4 @@
 name: deployment
-
 on:
   push:
     branches: [ "test" ]
@@ -7,21 +6,12 @@ on:
     branches: [ "test" ]
 
 jobs:
-
   deploy:
-
     runs-on: self-hosted
-
     steps:
     - name: Clone repository 
       uses: actions/checkout@v4
-      with:
-        ref: ${{ github.event.pull_request.head.ref }}
-    - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
-    - run: cp .env.example .env
-    - run: npm install
+    - name: Copy env
+      run: cp .env.example .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
