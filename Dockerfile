@@ -12,10 +12,7 @@ RUN npm ci
 
 COPY --chown=node:node . .
 
-# USER node
-RUN mkdir ./dist
-RUN chown -R node:node ./dist
-RUN chmod 777 ./dist
+USER node
 
 ###################
 # BUILD FOR PRODUCTION
