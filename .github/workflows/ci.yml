@@ -24,4 +24,4 @@ jobs:
     - run: cp .env.example .env
     - run: npm install
     - name: deploy
-      run: docker compose -f ci.docker-compose.yml up --detach --force-recreate
+      run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
