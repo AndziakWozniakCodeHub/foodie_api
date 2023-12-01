@@ -6,13 +6,15 @@ FROM node:18 As development
 
 WORKDIR /usr/src/app
 
-# COPY --chown=node:node package*.json ./
+COPY --chown=node:node package*.json ./
 
 RUN npm ci
 
-# COPY --chown=node:node . .
+COPY --chown=node:node . .
 
-# USER node
+USER node
+
+CMD [ "npm", "run", "start:dev" ]
 
 ###################
 # BUILD FOR PRODUCTION
