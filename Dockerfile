@@ -4,16 +4,17 @@
 
 FROM node:18 As development
 
+RUN mkdir /dist && chown node:node /dist
+
+RUN mkdir /user/src/app && chown node:node /usr/src/app
+
 WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
 RUN npm ci
 
-RUN chmod -R 777 dist
-
 COPY --chown=node:node . .
-
 
 USER node
 
