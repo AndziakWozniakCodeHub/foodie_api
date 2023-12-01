@@ -8,13 +8,14 @@ WORKDIR /usr/src/app
 
 COPY --chown=node:node package*.json ./
 
+RUN mkdir /dist \
+    && chown -R node:node /dist
+
 RUN npm ci
 
 COPY --chown=node:node . .
 
 USER node
-
-CMD [ "npm", "run", "start:dev" ]
 
 ###################
 # BUILD FOR PRODUCTION

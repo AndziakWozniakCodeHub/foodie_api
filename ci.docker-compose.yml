@@ -7,7 +7,7 @@ services:
       target: development
     env_file:
     - .env
-    # command: npm run start:dev
+    command: npm run start:dev
     ports:
       - 3000:3000
     depends_on:
