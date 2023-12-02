@@ -4,6 +4,7 @@ import { ConfigType } from '@nestjs/config';
 import mailingConfig from './config/mailing.config';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
+import { ContactDto } from './dto/contact.dto';
 
 @Injectable()
 export class MailingService {
@@ -69,6 +70,28 @@ export class MailingService {
       template: './resetPassword',
       context: {
         reset_url,
+      },
+    });
+  }
+
+  async sendEmailContact(contactData: ContactDto) {
+    await this.mailerService.sendMail({
+      to: 'kamil.andziakk97@gmail.com',
+      subject: `CONTACT US ${contactData.email}`,
+      template: './contact',
+      context: {
+        message: contactData.message,
+        name: contactData.name,
+        phoneNumber: contactData.phoneNumber,
+      },
+    });
+
+    await this.mailerService.sendMail({
+      to: contactData.email,
+      subject: 'Foodie - Potwierdzenie otrzymania Twojej wiadomości',
+      template: './contactResponse',
+      context: {
+        name: contactData.name,
       },
     });
   }
