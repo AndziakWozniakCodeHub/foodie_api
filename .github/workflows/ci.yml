@@ -6,16 +6,6 @@ on:
     branches: [ "test" ]
 
 jobs:
-  build:
-    runs-on: self-hosted
-    steps: 
-    - name: Clone repository 
-      uses: actions/checkout@v4
-    - name: Build image
-      run: docker build . --tag=$GITHUB_JOB
-    - name: Remove image
-      run: docker image rm -f $GITHUB_JOB
-
   deploy:
     runs-on: self-hosted
     steps:
@@ -25,3 +15,13 @@ jobs:
       run: cp .env.example .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
+
+  build:
+    runs-on: self-hosted
+    steps: 
+    - name: Clone repository 
+      uses: actions/checkout@v4
+    - name: Build image
+      run: docker build . --tag=$GITHUB_JOB
+    - name: Remove image
+      run: docker image rm -f $GITHUB_JOB
