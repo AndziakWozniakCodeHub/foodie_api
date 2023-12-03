@@ -4,7 +4,6 @@ on:
     branches: [ "test" ]
   pull_request:
     branches: [ "test" ]
-
 jobs:
   build:
     runs-on: self-hosted
@@ -12,7 +11,7 @@ jobs:
     - name: Clone repository 
       uses: actions/checkout@v4
     - name: Build image
-      run: docker build . --tag=$GITHUB_JOB
+      run: docker builds . --tag=$GITHUB_JOB
     - name: Remove image
       run: docker image rm -f $GITHUB_JOB
 
