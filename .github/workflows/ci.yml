@@ -1,17 +1,27 @@
-name: deployment
-
+name: build-deploy
 on:
   push:
-    branches: [ "test" ]
+    branches: [ "master" ]
   pull_request:
-    branches: [ "test" ]
-
+    branches: [ "master", "test" ]
 jobs:
-
   build:
-
     runs-on: self-hosted
-
+    steps: 
+    - name: Clone repository 
+      uses: actions/checkout@v4
+    - name: Build image
+      run: docker build . --tag=$GITHUB_JOB
+    - name: Remove image
+      run: docker image rm -f $GITHUB_JOB
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    if: github.ref == 'refs/heads/master'
     steps:
-    - name: docker compose
-      run: docker-compose up
+    - name: Clone repository 
+      uses: actions/checkout@v4
+    - name: Copy env
+      run: cp .env.example .env
+    - name: deploy
+      run: docker compose -f docker-compose.yml up --build --detach --force-recreate
