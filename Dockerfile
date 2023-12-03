@@ -1,10 +1,10 @@
 FROM node:18
 
-WORKDIR /app/src/2
+WORKDIR /app/src
 
 COPY package*.json ./
 
-RUN npm ci
+RUN npm install
 
 COPY . .
 
