@@ -1,7 +1,7 @@
 name: build-deploy
 on:
   push:
-    branches: [ "master", "test" ]
+    branches: [ "master" ]
   pull_request:
     branches: [ "master", "test" ]
 jobs:
