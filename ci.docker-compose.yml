@@ -8,6 +8,9 @@ services:
       - '3000:3000'
     env_file:
       - .env
+    environment:
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${SMTP_PASSWORD}
     depends_on:
       - postgres
 
