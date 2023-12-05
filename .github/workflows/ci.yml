@@ -18,14 +18,16 @@ jobs:
     runs-on: self-hosted
     needs: build
     if: github.ref == 'refs/heads/master'
-    with:
-      SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
     steps:
     - name: Clone repository 
       uses: actions/checkout@v4
     - name: Test secret
+      with:
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       run: echo $SMTP_PASSWORD
     - name: Copy env
+      with:
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
