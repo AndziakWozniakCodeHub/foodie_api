@@ -4,6 +4,8 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
+    "assets": ["mailing/templates/**/*"],
+    "watchAssets": true,
     "plugins": [
       "@nestjs/graphql",
       "@nestjs/swagger"
