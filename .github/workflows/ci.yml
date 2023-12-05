@@ -22,11 +22,11 @@ jobs:
     - name: Clone repository 
       uses: actions/checkout@v4
     - name: Test secret
-      with:
+      env:
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       run: echo $SMTP_PASSWORD
     - name: Copy env
-      with:
+      env:
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
       run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
     - name: deploy
