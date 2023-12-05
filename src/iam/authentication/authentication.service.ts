@@ -75,7 +75,10 @@ export class AuthenticationService {
       throw new ForbiddenException(`Confirm your email first`);
     }
 
-    return await this.generateTokens(user);
+    const tokens = await this.generateTokens(user);
+
+    const role = { role: user.role };
+    return { ...tokens, ...role };
   }
 
   async logout(id: number) {
