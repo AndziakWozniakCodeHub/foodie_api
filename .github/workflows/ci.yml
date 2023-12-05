@@ -23,5 +23,7 @@ jobs:
       uses: actions/checkout@v4
     - name: Copy env
       run: cp .env.example .env
+      run: sed -i -e "s/SMTP_USERNAME=/SMTP_USERNAME=$SMTP_USERNAME/g" .env
+      run: sed -i -e "s/SMTP_USERNAME=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
