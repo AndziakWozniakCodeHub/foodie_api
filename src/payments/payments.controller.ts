@@ -1,4 +1,4 @@
-import { Body, Controller, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { PaymentRequestBody } from './types/PaymentRequestBody';
 import { Response } from 'express';
@@ -20,5 +20,11 @@ export class PaymentsController {
       .catch((err) => {
         response.status(HttpStatus.BAD_REQUEST).json(err);
       });
+  }
+
+  @Get('createCustomer')
+  async createCustomer() {
+    console.log('test');
+    await this.paymentService.createCustomer();
   }
 }

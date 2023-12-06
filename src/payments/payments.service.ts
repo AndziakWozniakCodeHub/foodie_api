@@ -8,8 +8,16 @@ export class PaymentsService {
 
   constructor() {
     this.stripe = new Stripe(process.env.API_SECRET_KEY, {
-      apiVersion: '2020-08-27',
+      apiVersion: '2023-10-16',
     });
+  }
+
+  async createCustomer(): Promise<void> {
+    const customer = await this.stripe.customers.create({
+      email: 'customer@example.com',
+    });
+
+    console.log(customer.id);
   }
 
   createPayment(paymentRequestBody: PaymentRequestBody): Promise<any> {
