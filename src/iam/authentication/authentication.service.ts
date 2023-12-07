@@ -51,7 +51,7 @@ export class AuthenticationService {
         user.username,
         user.email,
       );
-      await this.paymentsService.createCustomer(user.email);
+      await this.paymentsService.createCustomer(signUpDto);
     } catch (err) {
       const pgUniqueViolationErrorCode = '23505';
       if (err.code === pgUniqueViolationErrorCode) {

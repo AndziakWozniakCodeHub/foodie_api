@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
 import { CheckoutDto } from './dto/checkout.dto';
+import { SignUpDto } from 'src/iam/authentication/dto/sign-up.dto';
 
 @Injectable()
 export class PaymentsService {
@@ -12,9 +13,10 @@ export class PaymentsService {
     });
   }
 
-  async createCustomer(email: string): Promise<void> {
+  async createCustomer(signUpDto: SignUpDto): Promise<void> {
     await this.stripe.customers.create({
-      email,
+      email: signUpDto.email,
+      name: signUpDto.username,
     });
   }
 
