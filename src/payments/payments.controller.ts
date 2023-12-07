@@ -1,30 +1,16 @@
-import { Body, Controller, Get, HttpStatus, Post, Res } from '@nestjs/common';
+import { Body, Controller, Post } from '@nestjs/common';
 import { PaymentsService } from './payments.service';
-import { PaymentRequestBody } from './types/PaymentRequestBody';
-import { Response } from 'express';
+import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
+import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
+import { CheckoutDto } from './dto/checkout.dto';
 
 @Controller('payments')
+@Auth(AuthType.None)
 export class PaymentsController {
   constructor(private paymentService: PaymentsService) {}
 
-  @Post()
-  createPayments(
-    @Res() response: Response,
-    @Body() paymentRequestBody: PaymentRequestBody,
-  ) {
-    this.paymentService
-      .createPayment(paymentRequestBody)
-      .then((res) => {
-        response.status(HttpStatus.CREATED).json(res);
-      })
-      .catch((err) => {
-        response.status(HttpStatus.BAD_REQUEST).json(err);
-      });
-  }
-
-  @Get('createCustomer')
-  async createCustomer() {
-    console.log('test');
-    await this.paymentService.createCustomer();
+  @Post('checkout')
+  async checkout(@Body() checkoutDto: CheckoutDto) {
+    return this.paymentService.checkout(checkoutDto);
   }
 }

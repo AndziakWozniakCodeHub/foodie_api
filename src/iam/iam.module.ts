@@ -15,6 +15,7 @@ import { RefreshTokenIdsStorage } from './authentication/refresh-token-ids.stora
 import { RolesGuard } from './authorization/guards/roles/roles.guard';
 import { MailingModule } from '../mailing/mailing.module';
 import { PaymentsModule } from 'src/payments/payments.module';
+import { PaymentsService } from 'src/payments/payments.service';
 
 @Module({
   imports: [
@@ -41,6 +42,7 @@ import { PaymentsModule } from 'src/payments/payments.module';
     AccessTokenGuard,
     AuthenticationService,
     RefreshTokenIdsStorage,
+    PaymentsService,
   ],
   controllers: [AuthenticationController],
 })

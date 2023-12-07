@@ -1,33 +1,37 @@
 import { Injectable } from '@nestjs/common';
 import Stripe from 'stripe';
-import { PaymentRequestBody } from './types/PaymentRequestBody';
+import { CheckoutDto } from './dto/checkout.dto';
 
 @Injectable()
 export class PaymentsService {
-  private stripe;
+  private readonly stripe: Stripe;
 
   constructor() {
-    this.stripe = new Stripe(process.env.API_SECRET_KEY, {
+    this.stripe = new Stripe(process.env.STRIPE, {
       apiVersion: '2023-10-16',
     });
   }
 
-  async createCustomer(): Promise<void> {
-    const customer = await this.stripe.customers.create({
-      email: 'customer@example.com',
+  async createCustomer(email: string): Promise<void> {
+    await this.stripe.customers.create({
+      email,
     });
-
-    console.log(customer.id);
   }
 
-  createPayment(paymentRequestBody: PaymentRequestBody): Promise<any> {
-    let sumAmount = 0;
-    paymentRequestBody.products.forEach((product) => {
-      sumAmount = sumAmount + product.price * product.quantity;
+  async checkout(checkoutDto: CheckoutDto): Promise<string> {
+    const session = await this.stripe.checkout.sessions.create({
+      cancel_url: 'http://localhost:3000/api/docs',
+      customer_email: checkoutDto.email,
+      line_items: [
+        {
+          price: 'price_1OKnIUF6uGp5IIZlNb4BVNGz',
+          quantity: 1,
+        },
+      ],
+      mode: 'payment',
+      payment_method_types: ['blik', 'card', 'p24'],
+      success_url: 'http://localhost:3000/api/docs',
     });
-    return this.stripe.paymentIntents.create({
-      amount: sumAmount * 100,
-      currency: paymentRequestBody.currency,
-    });
+    return session.url;
   }
 }
