@@ -10,11 +10,11 @@ import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 import { StorageService } from './storage.service';
 
-@Auth(AuthType.None)
-@Controller('upload')
+// @Auth(AuthType.None)
+@Controller('storage')
 export class StorageController {
   constructor(private readonly uploadService: StorageService) {}
-  @Post()
+  @Post('upload')
   @UseInterceptors(FileInterceptor('file'))
   async uploadFile(
     @UploadedFile(
@@ -26,6 +26,7 @@ export class StorageController {
     )
     file: Express.Multer.File,
   ) {
-    await this.uploadService.uploadFile(file);
+    const url = await this.uploadService.uploadFile(file);
+    return { url };
   }
 }
