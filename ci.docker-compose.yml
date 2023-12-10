@@ -8,11 +8,6 @@ services:
       - '80:3000'
     env_file:
       - .env
-    environment:
-      - SMTP_USERNAME
-      - SMTP_PASSWORD
-      - STRIPE
-      - STRIPE_WEBHOOK
     depends_on:
       - postgres
 
