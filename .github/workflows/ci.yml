@@ -1,9 +1,9 @@
 name: build-deploy
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "payments" ]
   pull_request:
-    branches: [ "master", "test" ]
+    branches: [ "master", "payments" ]
 jobs:
   build:
     runs-on: self-hosted
@@ -24,6 +24,7 @@ jobs:
     - name: Copy env
       env:
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
+        SMTP_PASSWORD: ${{ secrets.STRIPE_WEBHOOK }}
+      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env && sed -i -e "s/STRIPE_WEBHOOK=/STRIPE_WEBHOOK=$STRIPE_WEBHOOK/g" .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
