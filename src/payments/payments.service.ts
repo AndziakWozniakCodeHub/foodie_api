@@ -10,10 +10,10 @@ export class PaymentsService {
   private configService: ConfigService;
 
   constructor() {
-    this.stripe = new Stripe(process.env.STRIPE, {
+    this.configService = new ConfigService();
+    this.stripe = new Stripe(this.configService.get('STRIPE'), {
       apiVersion: '2023-10-16',
     });
-    this.configService = new ConfigService();
   }
 
   async createCustomer(signUpDto: SignUpDto): Promise<void> {
@@ -43,6 +43,8 @@ export class PaymentsService {
   async handleWebhookRequest(body: any, signature: any): Promise<any> {
     const secretEndpoint = this.configService.get('STRIPE_WEBHOOK');
     console.log(secretEndpoint);
+    console.log(body.toString());
+    console.log(signature);
 
     const event = this.stripe.webhooks.constructEvent(
       body,
