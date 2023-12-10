@@ -25,8 +25,9 @@ jobs:
       env:
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
         STRIPE_WEBHOOK: ${{ secrets.STRIPE_WEBHOOK }}
+        STRIPE_WEBHOOK_TEST: ${{ secrets.STRIPE_WEBHOOK_TEST }}
         STRIPE_TEST: ${{ secrets.STRIPE_TEST }}
         STRIPE: ${{ secrets.STRIPE }}
-      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env && sed -i -e "s/STRIPE_WEBHOOK=/STRIPE_WEBHOOK=$STRIPE_WEBHOOK/g" .env && sed -i -e "s/STRIPE_TEST=/STRIPE_TEST=$STRIPE_TEST/g" .env
+      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env && sed -i -e "s/STRIPE_WEBHOOK_TEST=/STRIPE_WEBHOOK_TEST=$STRIPE_WEBHOOK_TEST/g" .env && sed -i -e "s/STRIPE_TEST=/STRIPE_TEST=$STRIPE_TEST/g" .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate

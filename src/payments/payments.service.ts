@@ -11,7 +11,7 @@ export class PaymentsService {
 
   constructor() {
     this.configService = new ConfigService();
-    this.stripe = new Stripe(this.configService.get('STRIPE_TEST'), {
+    this.stripe = new Stripe(this.configService.get('STRIPE'), {
       apiVersion: '2023-10-16',
     });
   }
@@ -41,9 +41,9 @@ export class PaymentsService {
   }
 
   async handleWebhookRequest(body: any, signature: any): Promise<any> {
-    const secretEndpoint = this.configService.get('STRIPE_WEBHOOK');
+    const secretEndpoint = this.configService.get('STRIPE_WEBHOOK_TEST');
     console.log(secretEndpoint);
-    console.log(body);
+    console.log(body.toString());
     console.log(signature);
 
     const event = this.stripe.webhooks.constructEvent(
