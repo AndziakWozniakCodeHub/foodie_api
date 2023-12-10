@@ -1,4 +1,11 @@
-import { Body, Controller, Headers, Post, Req } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Headers,
+  Post,
+  RawBodyRequest,
+  Req,
+} from '@nestjs/common';
 import { PaymentsService } from './payments.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
@@ -16,10 +23,9 @@ export class PaymentsController {
 
   @Post('webhook')
   async webhook(
-    @Req() req: any,
-    @Headers('stripe-signature') signature: string,
+    @Headers('stripe-signature') sig: string,
+    @Req() req: RawBodyRequest<Request>,
   ) {
-    console.log(req.body);
-    return this.paymentService.handleWebhookRequest(req.body, signature);
+    return this.paymentService.handleWebhookRequest(req.rawBody, sig);
   }
 }
