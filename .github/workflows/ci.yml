@@ -3,7 +3,7 @@ on:
   push:
     branches: [ "master" ]
   pull_request:
-    branches: [ "master", "payments" ]
+    branches: [ "master", "test" ]
 jobs:
   build:
     runs-on: self-hosted
