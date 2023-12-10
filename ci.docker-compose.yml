@@ -11,6 +11,8 @@ services:
     environment:
       - SMTP_USERNAME
       - SMTP_PASSWORD
+      - STRIPE
+      - STRIPE_WEBHOOK
     depends_on:
       - postgres
 
