@@ -57,15 +57,4 @@ import { JsonBodyMiddleware } from './payments/json-body.middleware';
     },
   ],
 })
-export class AppModule implements NestModule {
-  public configure(consumer: MiddlewareConsumer): void {
-    consumer
-      .apply(RawBodyMiddleware)
-      .forRoutes({
-        path: '/payments/webhook',
-        method: RequestMethod.POST,
-      })
-      .apply(JsonBodyMiddleware)
-      .forRoutes('*');
-  }
-}
+export class AppModule {}

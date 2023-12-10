@@ -43,7 +43,7 @@ export class PaymentsService {
   async handleWebhookRequest(body: any, signature: any): Promise<any> {
     const secretEndpoint = this.configService.get('STRIPE_WEBHOOK');
     console.log(secretEndpoint);
-    console.log(body.toString());
+    console.log(body);
     console.log(signature);
 
     const event = this.stripe.webhooks.constructEvent(
