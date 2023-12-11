@@ -5,8 +5,8 @@ import { Readable } from 'stream';
 
 @Injectable()
 export class StorageService {
-  private readonly bucket = 'foodie-storage';
-  private readonly storage = new Storage({ projectId: 'arboreal-lane-407019' });
+  private readonly bucket = 'foodie_test';
+  private readonly storage = new Storage({ projectId: 'foodie-407891' });
 
   async getBuckets() {
     const [buckets] = await this.storage.getBuckets();
@@ -15,6 +15,22 @@ export class StorageService {
     for (const bucket of buckets) {
       console.log(`- ${bucket.name}`);
     }
+  }
+
+  async getPublicMealsFiles() {
+    const fileUrls = [];
+    const buckets = this.storage.bucket(this.bucket);
+    const [files] = await buckets.getFiles();
+    await buckets.getFiles();
+    for (const file of files) {
+      if (file.name.includes('meals/')) {
+        const a = await file.isPublic();
+        if (a[0]) {
+          fileUrls.push(file.publicUrl());
+        }
+      }
+    }
+    return fileUrls;
   }
 
   async uploadFile(file: Express.Multer.File) {
@@ -27,9 +43,10 @@ export class StorageService {
         metadata: {
           contentType: file.mimetype,
         },
+        public: true,
       }),
     );
-    return `https://storage.cloud.google.com/${this.bucket}/${filename}`;
+    return `https://storage.googleapis.com/${this.bucket}/${filename}`;
   }
   async delete(path: string) {
     await this.storage

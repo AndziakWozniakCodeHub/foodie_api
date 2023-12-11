@@ -1,5 +1,6 @@
 import {
   Controller,
+  Get,
   ParseFilePipe,
   Post,
   UploadedFile,
@@ -10,7 +11,7 @@ import { Auth } from '../iam/authentication/decorators/auth.decorator';
 import { AuthType } from '../iam/authentication/enums/auth-type.enum';
 import { StorageService } from './storage.service';
 
-// @Auth(AuthType.None)
+@Auth(AuthType.None)
 @Controller('storage')
 export class StorageController {
   constructor(private readonly uploadService: StorageService) {}
@@ -28,5 +29,15 @@ export class StorageController {
   ) {
     const url = await this.uploadService.uploadFile(file);
     return { url };
+  }
+
+  @Get('files/meals')
+  async getPublicMealsFiles() {
+    return await this.uploadService.getPublicMealsFiles();
+  }
+
+  @Get('bucket')
+  async getBucket() {
+    return await this.uploadService.getBuckets();
   }
 }
