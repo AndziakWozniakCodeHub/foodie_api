@@ -7,9 +7,11 @@ export class CreateMealInput {
   price: number;
 
   @MinLength(3)
+  @IsString()
   type: string;
 
   @MinLength(3)
+  @IsString()
   title: string;
 
   @IsString()

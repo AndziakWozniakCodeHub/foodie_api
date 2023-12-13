@@ -49,9 +49,10 @@ export class StorageService {
     return `https://storage.googleapis.com/${this.bucket}/${filename}`;
   }
   async delete(path: string) {
+    const decodedUrl = decodeURIComponent(path);
     await this.storage
       .bucket(this.bucket)
-      .file(path)
+      .file(decodedUrl)
       .delete({ ignoreNotFound: true });
   }
 }
