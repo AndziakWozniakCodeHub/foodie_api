@@ -8,10 +8,11 @@ services:
       - '3000:3000'
     env_file:
       - .env
+    environment:
+      - SMTP_USERNAME
+      - SMTP_PASSWORD
     depends_on:
       - postgres
-    volumes:
-      - .:/app/src
 
   postgres:
     image: postgres

@@ -1,0 +1,29 @@
+name: build-deploy
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master", "test" ]
+jobs:
+  build:
+    runs-on: self-hosted
+    steps: 
+    - name: Clone repository 
+      uses: actions/checkout@v4
+    - name: Build image
+      run: docker build . --tag=$GITHUB_JOB
+    - name: Remove image
+      run: docker image rm -f $GITHUB_JOB
+  deploy:
+    runs-on: self-hosted
+    needs: build
+    if: github.ref == 'refs/heads/master'
+    steps:
+    - name: Clone repository 
+      uses: actions/checkout@v4
+    - name: Copy env
+      env:
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
+    - name: deploy
+      run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate
