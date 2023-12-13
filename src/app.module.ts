@@ -15,10 +15,12 @@ import { HealthModule } from './health/health.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { MailingModule } from './mailing/mailing.module';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['dev.env'],
       validate,
     }),
     DatabaseModule,
@@ -38,14 +40,15 @@ import { MailingModule } from './mailing/mailing.module';
     RedisModule,
     HealthModule,
     MailingModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule {}

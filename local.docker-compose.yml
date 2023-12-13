@@ -1,18 +1,4 @@
 services:
-  api:
-    build:
-      dockerfile: Dockerfile
-      context: .
-    restart: always
-    ports:
-      - '3000:3000'
-    env_file:
-      - .env
-    depends_on:
-      - postgres
-    volumes:
-      - .:/app/src
-
   postgres:
     image: postgres
     restart: always
@@ -20,7 +6,7 @@ services:
       - "5435:5432"
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -32,7 +18,7 @@ services:
       - '5050:80'
     depends_on:
       - postgres
-  
+
   redis:
     image: redis
     ports:
