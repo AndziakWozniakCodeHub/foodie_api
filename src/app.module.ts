@@ -20,6 +20,7 @@ import { StorageModule } from './storage/storage.module';
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['dev.env'],
       validate,
     }),
     DatabaseModule,
