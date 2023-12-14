@@ -5,12 +5,9 @@ services:
       context: .
     restart: always
     ports:
-      - '3000:3000'
+      - '80:3000'
     env_file:
       - .env
-    environment:
-      - SMTP_USERNAME
-      - SMTP_PASSWORD
     depends_on:
       - postgres
 

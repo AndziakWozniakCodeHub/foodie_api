@@ -1,4 +1,9 @@
-import { Module } from '@nestjs/common';
+import {
+  MiddlewareConsumer,
+  Module,
+  NestModule,
+  RequestMethod,
+} from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
@@ -15,6 +20,9 @@ import { HealthModule } from './health/health.module';
 import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { APP_GUARD } from '@nestjs/core';
 import { MailingModule } from './mailing/mailing.module';
+import { PaymentsModule } from './payments/payments.module';
+import { RawBodyMiddleware } from './payments/raw-body.middleware';
+import { JsonBodyMiddleware } from './payments/json-body.middleware';
 import { StorageModule } from './storage/storage.module';
 
 @Module({
@@ -40,6 +48,7 @@ import { StorageModule } from './storage/storage.module';
     RedisModule,
     HealthModule,
     MailingModule,
+    PaymentsModule,
     StorageModule,
   ],
   controllers: [AppController],
@@ -51,4 +60,15 @@ import { StorageModule } from './storage/storage.module';
     // },
   ],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  public configure(consumer: MiddlewareConsumer): void {
+    consumer
+      .apply(RawBodyMiddleware)
+      .forRoutes({
+        path: '/payments/webhook',
+        method: RequestMethod.POST,
+      })
+      .apply(JsonBodyMiddleware)
+      .forRoutes('*');
+  }
+}
