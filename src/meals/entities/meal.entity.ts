@@ -9,11 +9,17 @@ export class Meal {
   id: number;
 
   @Column()
-  name: string;
+  title: string;
 
   @Column()
   price: number;
 
   @Column()
   type: string;
+
+  @Column()
+  description: string;
+
+  @Column()
+  imageSource: string;
 }

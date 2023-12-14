@@ -23,10 +23,12 @@ import { MailingModule } from './mailing/mailing.module';
 import { PaymentsModule } from './payments/payments.module';
 import { RawBodyMiddleware } from './payments/raw-body.middleware';
 import { JsonBodyMiddleware } from './payments/json-body.middleware';
+import { StorageModule } from './storage/storage.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
+      envFilePath: ['dev.env'],
       validate,
     }),
     DatabaseModule,
@@ -47,14 +49,15 @@ import { JsonBodyMiddleware } from './payments/json-body.middleware';
     HealthModule,
     MailingModule,
     PaymentsModule,
+    StorageModule,
   ],
   controllers: [AppController],
   providers: [
     AppService,
-    {
-      provide: APP_GUARD,
-      useClass: ThrottlerGuard,
-    },
+    // {
+    //   provide: APP_GUARD,
+    //   useClass: ThrottlerGuard,
+    // },
   ],
 })
 export class AppModule implements NestModule {

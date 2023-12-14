@@ -1,14 +1,25 @@
 import { InputType } from '@nestjs/graphql';
-import { IsNumber, MinLength } from 'class-validator';
+import { IsNumber, IsString, Matches, MinLength } from 'class-validator';
 
 @InputType()
 export class CreateMealInput {
-  @MinLength(3)
-  name: string;
-
   @IsNumber()
   price: number;
 
   @MinLength(3)
+  @IsString()
   type: string;
+
+  @MinLength(3)
+  @IsString()
+  title: string;
+
+  @IsString()
+  description: string;
+
+  @Matches(/^(https?:\/\/)/, {
+    message: 'imageSource musi zaczynać się od http:// lub https://',
+  })
+  @IsString()
+  imageSource: string;
 }

@@ -3,6 +3,7 @@ import { MealsService } from './meals.service';
 import { Meal } from './entities/meal.entity';
 import { CreateMealInput } from './dto/create-meal.input';
 import { UpdateMealInput } from './dto/update-meal.input';
+import { ParseIntPipe } from '@nestjs/common';
 
 @Resolver(() => Meal)
 export class MealsResolver {
@@ -32,7 +33,7 @@ export class MealsResolver {
   }
 
   @Mutation(() => Meal)
-  removeMeal(@Args('id', { type: () => ID }) id: number) {
+  removeMeal(@Args('id', { type: () => ID }, ParseIntPipe) id: number) {
     return this.mealsService.remove(id);
   }
 }

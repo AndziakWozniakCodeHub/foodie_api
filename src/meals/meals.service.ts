@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateMealInput } from './dto/create-meal.input';
 import { UpdateMealInput } from './dto/update-meal.input';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -33,7 +33,12 @@ export class MealsService {
     return `This action updates a #${id} meal`;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} meal`;
+  async remove(id: number): Promise<Meal> {
+    const meal = await this.findOne(id);
+    if (!meal) {
+      throw new NotFoundException(`Meal ID ${id} not found`);
+    }
+    await this.mealRepository.remove(meal);
+    return { ...meal, id };
   }
 }
