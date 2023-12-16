@@ -23,6 +23,7 @@ import { RefreshTokenPayload } from './interfaces/refresh-token-payload.interfac
 import { MailingService } from '../../mailing/mailing.service';
 import { EmailConfirmationService } from '../../mailing/email-confirmation/email-confirmation.service';
 import { ResetPasswordDto } from './dto/reset-password.dto';
+import { PaymentsService } from 'src/payments/payments.service';
 
 @Injectable()
 export class AuthenticationService {
@@ -35,6 +36,7 @@ export class AuthenticationService {
     private readonly refreshTokenIdsStorage: RefreshTokenIdsStorage,
     private readonly mailingService: MailingService,
     private readonly emailConfirmationService: EmailConfirmationService,
+    private readonly paymentsService: PaymentsService,
   ) {}
 
   async signUp(signUpDto: SignUpDto) {
@@ -49,6 +51,7 @@ export class AuthenticationService {
         user.username,
         user.email,
       );
+      await this.paymentsService.createCustomer(signUpDto);
     } catch (err) {
       const pgUniqueViolationErrorCode = '23505';
       if (err.code === pgUniqueViolationErrorCode) {

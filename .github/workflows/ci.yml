@@ -17,13 +17,17 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs: build
-    if: github.ref == 'refs/heads/master'
+    # if: github.ref == 'refs/heads/master'
     steps:
     - name: Clone repository 
       uses: actions/checkout@v4
     - name: Copy env
       env:
         SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
-      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env
+        STRIPE_WEBHOOK: ${{ secrets.STRIPE_WEBHOOK }}
+        STRIPE_WEBHOOK_TEST: ${{ secrets.STRIPE_WEBHOOK_TEST }}
+        STRIPE_TEST: ${{ secrets.STRIPE_TEST }}
+        STRIPE: ${{ secrets.STRIPE }}
+      run: cp .env.example .env && sed -i -e "s/SMTP_PASSWORD=/SMTP_PASSWORD=$SMTP_PASSWORD/g" .env && sed -i -e "s/STRIPE_WEBHOOK_TEST=/STRIPE_WEBHOOK_TEST=$STRIPE_WEBHOOK_TEST/g" .env && sed -i -e "s/STRIPE_TEST=/STRIPE_TEST=$STRIPE_TEST/g" .env
     - name: deploy
       run: docker compose -f ci.docker-compose.yml up --build --detach --force-recreate

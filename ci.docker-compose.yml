@@ -5,14 +5,13 @@ services:
       context: .
     restart: always
     ports:
-      - '3000:3000'
+      - '80:3000'
     env_file:
       - .env
-    environment:
-      - SMTP_USERNAME
-      - SMTP_PASSWORD
     depends_on:
       - postgres
+    volumes:
+      - /home/${USER}/docker-to-storage:/app/src
 
   postgres:
     image: postgres
@@ -21,6 +20,8 @@ services:
       - "5432:5432"
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - /home/postgres:/var/lib/postgresql/data
       
   pgadmin:
     image: dpage/pgadmin4
