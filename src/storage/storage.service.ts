@@ -6,7 +6,7 @@ import { Readable } from 'stream';
 @Injectable()
 export class StorageService {
   private readonly bucket = 'foodie_test';
-  private readonly keyFilename = './keyfile.json';
+  private readonly keyFilename = '/home/docker-to-storage/keyfile.json';
   private readonly storage = new Storage({ keyFilename: this.keyFilename });
 
   async getBuckets() {
