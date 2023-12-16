@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserInput } from './dto/create-user.input';
 import { UpdateUserInput } from './dto/update-user.input';
 import { Repository } from 'typeorm';
@@ -42,7 +42,11 @@ export class UsersService {
 
   async remove(id: number) {
     const user = await this.findOne(id);
-    return this.userRepository.remove(user);
+    if (!user) {
+      throw new NotFoundException(`User ${id} not found`);
+    }
+    await this.userRepository.remove(user);
+    return { ...user, id };
   }
 
   // Not for GraphQL resolver
