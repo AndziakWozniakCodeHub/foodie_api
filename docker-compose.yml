@@ -12,6 +12,7 @@ services:
       - postgres
     volumes:
       - .:/app/src
+      - /home/docker-to-storage/keyfile.json:/home/docker-to-storage/keyfile.json
 
   postgres:
     image: postgres
@@ -20,6 +21,9 @@ services:
       - "5435:5432"
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+    volumes:
+      - /home/postgres:/var/lib/postgresql/data
+
       
   pgadmin:
     image: dpage/pgadmin4
