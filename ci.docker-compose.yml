@@ -10,6 +10,8 @@ services:
       - .env
     depends_on:
       - postgres
+    volumes:
+      - /home/${USER}/docker-to-storage:/app/src
 
   postgres:
     image: postgres
