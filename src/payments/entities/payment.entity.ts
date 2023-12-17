@@ -1,4 +1,4 @@
-import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { ObjectType, Field, ID, GraphQLTimestamp } from '@nestjs/graphql';
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity()
@@ -12,6 +12,7 @@ export class Payment {
   stripe_id: string;
 
   @Column()
+  @Field(() => GraphQLTimestamp, { description: 'date of creation' })
   created_at: number;
 
   @Column()
