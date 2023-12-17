@@ -45,19 +45,19 @@ export class PaymentsService {
   findMany(dFrom: string, dTo: string) {
     const dateFrom = new Date(dFrom);
     const dateTo = new Date(dTo);
-    const payment = this.paymentRepository.find({
+    const payments = this.paymentRepository.find({
       where: {
         created_at: Between(dateFrom, dateTo),
         // user_id: userId,
       },
     });
 
-    if (!payment) {
+    if (!payments) {
       throw new UserInputError(
         `Payment with date #${dFrom} - ${dTo} does not exist`,
       );
     }
-    return payment;
+    return payments;
   }
 
   async checkout(checkoutDto: CheckoutDto): Promise<string> {
@@ -77,7 +77,7 @@ export class PaymentsService {
     return session.url;
   }
 
-  async handleWebhookRequest(body: any, signature: any): Promise<any> {
+  handleWebhookRequest(body: any, signature: any) {
     const secretEndpoint = this.configService.get('STRIPE_WEBHOOK_TEST');
     const event = this.stripe.webhooks.constructEvent(
       body,
@@ -94,7 +94,7 @@ export class PaymentsService {
           type: event.type,
           price: event.data.object.amount_total,
         };
-        await this.savePayment(createPaymentInput);
+        this.savePayment(createPaymentInput);
         break;
       default:
         console.log(`Sorry, we are out of event types.`);
