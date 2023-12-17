@@ -11,7 +11,7 @@ services:
     depends_on:
       - postgres
     volumes:
-      - /home/${USER}/docker-to-storage:/app/src
+      - /home/docker-to-storage/keyfile.json:/home/docker-to-storage/keyfile.json
 
   postgres:
     image: postgres
