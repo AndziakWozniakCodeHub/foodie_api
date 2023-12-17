@@ -1,12 +1,14 @@
 import { Body, Controller, Headers, Post, Req } from '@nestjs/common';
+import { Args, GraphQLISODateTime, ID, Query } from '@nestjs/graphql';
 import { PaymentsService } from './payments.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
 import { CheckoutDto } from './dto/checkout.dto';
+import { Payment } from './entities/payment.entity';
 
 @Controller('payments')
 @Auth(AuthType.None)
-export class PaymentsController {
+export class PaymentsResolver {
   constructor(private paymentService: PaymentsService) {}
 
   @Post('checkout')
@@ -20,5 +22,18 @@ export class PaymentsController {
     @Headers('stripe-signature') signature: string,
   ) {
     return this.paymentService.handleWebhookRequest(req.body, signature);
+  }
+
+  @Query(() => [Payment], { name: 'payments' })
+  findMany(
+    @Args('dateFrom', { type: () => GraphQLISODateTime }) dateFrom: string,
+    @Args('dateTo', { type: () => GraphQLISODateTime }) dateTo: string,
+  ) {
+    return this.paymentService.findMany(dateFrom, dateTo);
+  }
+
+  @Query(() => Payment, { name: 'payment' })
+  findOne(@Args('id', { type: () => ID }) id: number) {
+    return this.paymentService.findOne(id);
   }
 }

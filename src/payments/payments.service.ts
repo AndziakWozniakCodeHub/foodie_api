@@ -5,8 +5,9 @@ import { SignUpDto } from 'src/iam/authentication/dto/sign-up.dto';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payment.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { CreatePaymentInput } from './dto/create-payment.input';
+import { UserInputError } from '@nestjs/apollo';
 
 @Injectable()
 export class PaymentsService {
@@ -22,16 +23,46 @@ export class PaymentsService {
     });
   }
 
-  async createCustomer(signUpDto: SignUpDto): Promise<void> {
-    await this.stripe.customers.create({
+  async createCustomer(signUpDto: SignUpDto): Promise<Stripe.Customer> {
+    return this.stripe.customers.create({
       email: signUpDto.email,
       name: signUpDto.username,
     });
   }
 
+  findAll() {
+    return this.paymentRepository.find();
+  }
+
+  findOne(id: number) {
+    const payment = this.paymentRepository.findOne({ where: { id } });
+    if (!payment) {
+      throw new UserInputError(`Payment with date #${id} does not exist`);
+    }
+    return payment;
+  }
+
+  findMany(dFrom: string, dTo: string) {
+    const dateFrom = new Date(dFrom);
+    const dateTo = new Date(dTo);
+    const payments = this.paymentRepository.find({
+      where: {
+        created_at: Between(dateFrom, dateTo),
+        // user_id: userId,
+      },
+    });
+
+    if (!payments) {
+      throw new UserInputError(
+        `Payment with date #${dFrom} - ${dTo} does not exist`,
+      );
+    }
+    return payments;
+  }
+
   async checkout(checkoutDto: CheckoutDto): Promise<string> {
     const session = await this.stripe.checkout.sessions.create({
-      cancel_url: 'https://innovativy.con/',
+      cancel_url: 'https://innovativy.com/',
       customer_email: checkoutDto.email,
       line_items: [
         {
@@ -46,7 +77,7 @@ export class PaymentsService {
     return session.url;
   }
 
-  async handleWebhookRequest(body: any, signature: any): Promise<any> {
+  handleWebhookRequest(body: any, signature: any) {
     const secretEndpoint = this.configService.get('STRIPE_WEBHOOK_TEST');
     const event = this.stripe.webhooks.constructEvent(
       body,
@@ -63,7 +94,7 @@ export class PaymentsService {
           type: event.type,
           price: event.data.object.amount_total,
         };
-        await this.savePayment(createPaymentInput);
+        this.savePayment(createPaymentInput);
         break;
       default:
         console.log(`Sorry, we are out of event types.`);
