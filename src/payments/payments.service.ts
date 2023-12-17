@@ -5,8 +5,9 @@ import { SignUpDto } from 'src/iam/authentication/dto/sign-up.dto';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Payment } from './entities/payment.entity';
-import { Repository } from 'typeorm';
+import { Between, Repository } from 'typeorm';
 import { CreatePaymentInput } from './dto/create-payment.input';
+import { UserInputError } from '@nestjs/apollo';
 
 @Injectable()
 export class PaymentsService {
@@ -22,11 +23,41 @@ export class PaymentsService {
     });
   }
 
-  async createCustomer(signUpDto: SignUpDto): Promise<void> {
-    await this.stripe.customers.create({
+  async createCustomer(signUpDto: SignUpDto): Promise<Stripe.Customer> {
+    return this.stripe.customers.create({
       email: signUpDto.email,
       name: signUpDto.username,
     });
+  }
+
+  findAll() {
+    return this.paymentRepository.find();
+  }
+
+  findOne(created_at: number) {
+    const payment = this.paymentRepository.findOne({ where: { created_at } });
+    if (!payment) {
+      throw new UserInputError(
+        `Payment with date #${created_at} does not exist`,
+      );
+    }
+    return payment;
+  }
+
+  findMany(dateFrom: number, dateTo: number) {
+    const payment = this.paymentRepository.find({
+      where: {
+        created_at: Between(dateFrom, dateTo),
+        // user_id: userId,
+      },
+    });
+
+    if (!payment) {
+      throw new UserInputError(
+        `Payment with date #${dateFrom} - ${dateTo} does not exist`,
+      );
+    }
+    return payment;
   }
 
   async checkout(checkoutDto: CheckoutDto): Promise<string> {
