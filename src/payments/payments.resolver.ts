@@ -1,5 +1,5 @@
 import { Body, Controller, Headers, Post, Req } from '@nestjs/common';
-import { Args, GraphQLTimestamp, ID, Query } from '@nestjs/graphql';
+import { Args, GraphQLISODateTime, ID, Query } from '@nestjs/graphql';
 import { PaymentsService } from './payments.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
@@ -8,7 +8,7 @@ import { Payment } from './entities/payment.entity';
 
 @Controller('payments')
 @Auth(AuthType.None)
-export class PaymentsController {
+export class PaymentsResolver {
   constructor(private paymentService: PaymentsService) {}
 
   @Post('checkout')
@@ -26,8 +26,8 @@ export class PaymentsController {
 
   @Query(() => [Payment], { name: 'payments' })
   findMany(
-    @Args('dateFrom', { type: () => GraphQLTimestamp }) dateFrom: number,
-    @Args('dateTo', { type: () => GraphQLTimestamp }) dateTo: number,
+    @Args('dateFrom', { type: () => GraphQLISODateTime }) dateFrom: string,
+    @Args('dateTo', { type: () => GraphQLISODateTime }) dateTo: string,
   ) {
     return this.paymentService.findMany(dateFrom, dateTo);
   }

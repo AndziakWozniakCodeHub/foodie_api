@@ -34,17 +34,17 @@ export class PaymentsService {
     return this.paymentRepository.find();
   }
 
-  findOne(created_at: number) {
-    const payment = this.paymentRepository.findOne({ where: { created_at } });
+  findOne(id: number) {
+    const payment = this.paymentRepository.findOne({ where: { id } });
     if (!payment) {
-      throw new UserInputError(
-        `Payment with date #${created_at} does not exist`,
-      );
+      throw new UserInputError(`Payment with date #${id} does not exist`);
     }
     return payment;
   }
 
-  findMany(dateFrom: number, dateTo: number) {
+  findMany(dFrom: string, dTo: string) {
+    const dateFrom = new Date(dFrom);
+    const dateTo = new Date(dTo);
     const payment = this.paymentRepository.find({
       where: {
         created_at: Between(dateFrom, dateTo),
@@ -54,7 +54,7 @@ export class PaymentsService {
 
     if (!payment) {
       throw new UserInputError(
-        `Payment with date #${dateFrom} - ${dateTo} does not exist`,
+        `Payment with date #${dFrom} - ${dTo} does not exist`,
       );
     }
     return payment;
@@ -62,7 +62,7 @@ export class PaymentsService {
 
   async checkout(checkoutDto: CheckoutDto): Promise<string> {
     const session = await this.stripe.checkout.sessions.create({
-      cancel_url: 'https://innovativy.con/',
+      cancel_url: 'https://innovativy.com/',
       customer_email: checkoutDto.email,
       line_items: [
         {
