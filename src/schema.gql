@@ -2,6 +2,24 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
+type Payment {
+  """a unique identifier"""
+  id: ID!
+
+  """date of creation"""
+  created_at: DateTime!
+  stripe_id: String!
+  customer_email: String!
+  type: String!
+  price: Float!
+  user: User!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type User {
   """a unique identifier"""
   id: ID!
@@ -10,6 +28,7 @@ type User {
   email: String!
   password: String!
   isEmailConfirmed: Boolean!
+  payments: [Payment!]!
 }
 
 enum Role {
@@ -27,30 +46,14 @@ type Meal {
   imageSource: String!
 }
 
-type Payment {
-  """a unique identifier"""
-  id: ID!
-
-  """date of creation"""
-  created_at: DateTime!
-  stripe_id: String!
-  customer_email: String!
-  type: String!
-  price: Float!
-}
-
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 type Query {
   users: [User!]!
   user(id: ID!): User!
   meals: [Meal!]!
   meal(id: ID!): Meal!
-  payments(dateFrom: DateTime!, dateTo: DateTime!): [Payment!]!
+  paymentsRange(dateFrom: DateTime!, dateTo: DateTime!): [Payment!]!
   payment(id: ID!): Payment!
+  payments: [Payment!]!
 }
 
 type Mutation {

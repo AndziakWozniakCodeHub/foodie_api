@@ -66,8 +66,14 @@ export class PaymentsService {
       customer_email: checkoutDto.email,
       line_items: [
         {
-          price: 'price_1OKnIUF6uGp5IIZlNb4BVNGz',
           quantity: 1,
+          price_data: {
+            currency: 'PLN',
+            unit_amount: checkoutDto.value * 100,
+            product_data: {
+              name: 'Usługi cateringowe',
+            },
+          },
         },
       ],
       mode: 'payment',
