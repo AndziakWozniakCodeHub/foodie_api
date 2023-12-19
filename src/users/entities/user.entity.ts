@@ -1,7 +1,15 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinTable,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
+import { DateEntity } from 'src/dates/entities/date.entity';
 
 @Entity()
 @ObjectType()
@@ -28,4 +36,8 @@ export class User {
 
   @OneToMany(() => Payment, (payment) => payment.user)
   payments: Payment[];
+
+  @ManyToMany(() => DateEntity, (date) => date.users)
+  @JoinTable()
+  dates: DateEntity[];
 }

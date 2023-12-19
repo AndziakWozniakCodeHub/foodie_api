@@ -24,6 +24,7 @@ import { PaymentsModule } from './payments/payments.module';
 import { RawBodyMiddleware } from './payments/raw-body.middleware';
 import { JsonBodyMiddleware } from './payments/json-body.middleware';
 import { StorageModule } from './storage/storage.module';
+import { DateModule } from './dates/date.module';
 
 @Module({
   imports: [
@@ -49,6 +50,7 @@ import { StorageModule } from './storage/storage.module';
     MailingModule,
     PaymentsModule,
     StorageModule,
+    DateModule,
   ],
   controllers: [AppController],
   providers: [
