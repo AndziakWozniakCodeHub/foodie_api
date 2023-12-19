@@ -32,6 +32,6 @@ export class Payment {
   price: number;
 
   @ManyToOne(() => User, (user) => user.payments)
-  @JoinColumn({ name: 'userId' }) // Specify the foreign key column
+  @JoinColumn({ name: 'user_id' })
   user: User;
 }

@@ -1,5 +1,6 @@
 import { InputType } from '@nestjs/graphql';
 import { IsEmail, IsNumber, MinLength } from 'class-validator';
+import { User } from 'src/users/entities/user.entity';
 
 @InputType()
 export class CreatePaymentInput {
@@ -7,7 +8,7 @@ export class CreatePaymentInput {
   stripe_id: string;
 
   @MinLength(3)
-  created_at: number;
+  created_at: Date;
 
   @IsEmail()
   customer_email: string;
@@ -17,4 +18,7 @@ export class CreatePaymentInput {
 
   @IsNumber()
   price: number;
+
+  // @IsNumber()
+  user: User;
 }
