@@ -4,12 +4,11 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
-import { DateEntity } from 'src/dates/entities/date.entity';
+import { DateEntity } from 'src/date/entities/date.entity';
 
 @Entity()
 @ObjectType()
@@ -34,10 +33,10 @@ export class User {
   @Column({ default: false })
   isEmailConfirmed: boolean;
 
-  @OneToMany(() => Payment, (payment) => payment.user)
+  @ManyToMany(() => Payment, (payment) => payment.user)
   payments: Payment[];
 
-  @ManyToMany(() => DateEntity, (date) => date.users)
+  @ManyToMany(() => DateEntity, (date) => date.user)
   @JoinTable()
   dates: DateEntity[];
 }

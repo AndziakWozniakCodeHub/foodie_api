@@ -20,7 +20,7 @@ export class DateEntity {
   date: string;
 
   @ManyToMany(() => User, (user) => user.dates)
-  users: User[];
+  user: User[];
 
   @ManyToMany(() => Meal, (meal) => meal.dates)
   @JoinTable()
