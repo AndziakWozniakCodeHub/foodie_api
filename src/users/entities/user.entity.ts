@@ -4,11 +4,13 @@ import {
   Entity,
   JoinTable,
   ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
 import { DateEntity } from 'src/date/entities/date.entity';
+import { MealUserDates } from 'src/date/entities/date-meal-user.entity';
 
 @Entity()
 @ObjectType()
@@ -36,7 +38,9 @@ export class User {
   @ManyToMany(() => Payment, (payment) => payment.user)
   payments: Payment[];
 
-  @ManyToMany(() => DateEntity, (date) => date.user)
-  @JoinTable()
-  dates: DateEntity[];
+  @OneToMany(
+    () => MealUserDates,
+    (mealUserDates: MealUserDates) => mealUserDates.dates,
+  )
+  meal_user_dates: MealUserDates[];
 }

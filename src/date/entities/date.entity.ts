@@ -8,6 +8,7 @@ import {
 import { User } from '../../users/entities/user.entity';
 import { Meal } from '../../meals/entities/meal.entity';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { MealUserDates } from './date-meal-user.entity';
 
 @Entity()
 @ObjectType()
@@ -19,10 +20,6 @@ export class DateEntity {
   @Column()
   date: string;
 
-  @ManyToMany(() => User, (user) => user.dates)
-  user: User[];
-
-  @ManyToMany(() => Meal, (meal) => meal.dates)
-  @JoinTable()
-  meals: Meal[];
+  @ManyToMany(() => MealUserDates)
+  meal_user_dates?: MealUserDates[];
 }

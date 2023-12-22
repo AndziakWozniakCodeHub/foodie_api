@@ -1,4 +1,5 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
+import { MealUserDates } from 'src/date/entities/date-meal-user.entity';
 import { DateEntity } from 'src/date/entities/date.entity';
 import {
   Column,
@@ -30,7 +31,9 @@ export class Meal {
   @Column()
   imageSource: string;
 
-  @ManyToMany(() => DateEntity, (date) => date.meals)
-  @JoinTable()
-  dates: DateEntity[];
+  @ManyToMany(
+    () => MealUserDates,
+    (mealUserDates: MealUserDates) => mealUserDates.dates,
+  )
+  meal_user_dates: MealUserDates[];
 }
