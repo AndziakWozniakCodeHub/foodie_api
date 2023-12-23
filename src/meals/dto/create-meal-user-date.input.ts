@@ -1,8 +1,6 @@
-import { InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
-export class DateMealUserInput {
+export class InsertMealForUserInDateDto {
   @ApiProperty()
   meal_id: number;
   @ApiProperty()

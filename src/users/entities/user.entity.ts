@@ -2,15 +2,13 @@ import { ObjectType, Field, ID } from '@nestjs/graphql';
 import {
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
-import { DateEntity } from 'src/date/entities/date.entity';
-import { MealUserDates } from 'src/date/entities/date-meal-user.entity';
+import { MealUserDates } from 'src/date/entities/meal-user-date.entity';
 
 @Entity()
 @ObjectType()
@@ -42,5 +40,11 @@ export class User {
     () => MealUserDates,
     (mealUserDates: MealUserDates) => mealUserDates.dates,
   )
-  meal_user_dates: MealUserDates[];
+  userDates: MealUserDates[];
+
+  @OneToMany(
+    () => MealUserDates,
+    (mealUserDates: MealUserDates) => mealUserDates.meals,
+  )
+  userMeals: MealUserDates[];
 }

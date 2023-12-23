@@ -20,6 +20,14 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type DateEntity {
+  """a unique identifier"""
+  id: ID!
+  date: DateTime!
+  meals: [Meal!]
+  mealUserDates: [MealUserDates!]
+}
+
 type Meal {
   """a unique identifier"""
   id: ID!
@@ -28,15 +36,19 @@ type Meal {
   type: String!
   description: String!
   imageSource: String!
-  dates: [DateEntity!]!
+  users: [User!]!
+  dates: [DateEntity!]
+  mealDates: [MealUserDates!]!
+  mealUsers: [MealUserDates!]!
 }
 
-type DateEntity {
-  """a unique identifier"""
-  id: ID!
-  date: String!
-  user: [User!]!
+type MealUserDates {
+  meal_id: Float!
+  date_id: Float!
+  user_id: Float!
   meals: [Meal!]!
+  dates: [DateEntity!]!
+  users: [User!]!
 }
 
 type User {
@@ -48,7 +60,8 @@ type User {
   password: String!
   isEmailConfirmed: Boolean!
   payments: [Payment!]!
-  dates: [DateEntity!]!
+  userDates: [MealUserDates!]!
+  userMeals: [MealUserDates!]!
 }
 
 enum Role {

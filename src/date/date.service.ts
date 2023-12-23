@@ -1,51 +1,56 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Meal } from 'src/meals/entities/meal.entity';
 import { Repository } from 'typeorm';
-import { DateEntity } from './entities/date.entity';
-import { CreateMealDateUserInput } from './dto/create-meal-date-user.dto';
+import { DateEntity } from 'src/date/entities/date.entity';
+import { MealUserDates } from 'src/date/entities/meal-user-date.entity';
 import { User } from 'src/users/entities/user.entity';
+import { DateTime } from 'luxon';
+import { Meal } from 'src/meals/entities/meal.entity';
+import { InsertMealForUserInDateDto } from 'src/meals/dto/create-meal-user-date.input';
 
 @Injectable()
 export class DateService {
   constructor(
     @InjectRepository(Meal)
-    private readonly mealRepository: Repository<Meal>,
+    private readonly mealsRepository: Repository<Meal>,
     @InjectRepository(DateEntity)
-    private readonly dateRepository: Repository<DateEntity>,
+    private readonly datesRepository: Repository<DateEntity>,
+    @InjectRepository(MealUserDates)
+    private readonly mealUserDatesRepository: Repository<MealUserDates>,
     @InjectRepository(User)
-    private readonly userRepository: Repository<User>,
+    private readonly usersRepository: Repository<User>,
   ) {}
 
-  async create(createMealDateUserInput: CreateMealDateUserInput) {
-    const dateEntity = await this.dateRepository.findOneOrFail({
-      where: { date: createMealDateUserInput.date },
+  async createMealsForUserInParticularDay(
+    insertMealForUserInDateDto: InsertMealForUserInDateDto,
+  ): Promise<void> {
+    const meal = await this.mealsRepository.findOneBy({
+      id: insertMealForUserInDateDto.meal_id,
     });
 
-    const mealEntity = await this.mealRepository.findOneOrFail({
-      where: { id: createMealDateUserInput.mealId },
+    const user = await this.usersRepository.findOneBy({
+      id: insertMealForUserInDateDto.user_id,
     });
 
-    const userEntity = await this.userRepository.findOneOrFail({
-      where: { id: createMealDateUserInput.userId },
+    const dateToJs = DateTime.fromFormat(
+      insertMealForUserInDateDto.date,
+      'yyyy-MM-dd',
+    ).toJSDate();
+
+    const [dateFromDatabase] = await this.datesRepository.find({
+      where: { date: dateToJs },
     });
 
-    if (!dateEntity.meals) {
-      const newDateEntity = {
-        ...dateEntity,
-        user: [userEntity],
-        meals: [mealEntity],
-      };
-      return this.dateRepository.save(newDateEntity);
+    if (!dateFromDatabase || !meal || !user) {
+      throw new BadRequestException('No meal / user / date found');
     }
 
-    const meals = [...dateEntity.meals, mealEntity];
-
-    const newDateEntity = {
-      ...dateEntity,
-      user: [userEntity],
-      meals,
+    const mealForUserInDay = {
+      meal_id: meal.id,
+      date_id: dateFromDatabase.id,
+      user_id: user.id,
     };
-    return this.dateRepository.save(newDateEntity);
+
+    await this.mealUserDatesRepository.save(mealForUserInDay);
   }
 }
