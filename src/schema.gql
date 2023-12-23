@@ -87,6 +87,7 @@ type Mutation {
   createMeal(createMealInput: CreateMealInput!): Meal!
   updateMeal(id: Float!, updateMealInput: UpdateMealInput!): Meal!
   removeMeal(id: ID!): Meal!
+  insertMealForUserInDate: DateMealUser!
 }
 
 input CreateUserInput {

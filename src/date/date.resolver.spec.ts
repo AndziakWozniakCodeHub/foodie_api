@@ -1,15 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { DateController } from './date.controller';
+import { DateResolver } from './date.resolver';
 
 describe('DateController', () => {
-  let controller: DateController;
+  let controller: DateResolver;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [DateController],
+      controllers: [DateResolver],
     }).compile();
 
-    controller = module.get<DateController>(DateController);
+    controller = module.get<DateResolver>(DateResolver);
   });
 
   it('should be defined', () => {

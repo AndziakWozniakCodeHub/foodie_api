@@ -51,7 +51,7 @@ export class DateService {
       user_id: user.id,
       occurence: insertMealForUserInDateDto.occurence,
     };
-
-    await this.dateMealUserRepository.save(mealForUserInDay);
+    const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
+    await this.dateMealUserRepository.save(dateMealUser);
   }
 }

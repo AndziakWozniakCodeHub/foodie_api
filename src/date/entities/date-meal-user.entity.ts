@@ -6,14 +6,19 @@ import {
   ManyToMany,
   ManyToOne,
   PrimaryColumn,
+  PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DateEntity } from './date.entity';
 import { User } from 'src/users/entities/user.entity';
-import { ObjectType } from '@nestjs/graphql';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
 
-@Entity('meal_user_dates')
+@Entity()
 @ObjectType()
 export class DateMealUser {
+  @PrimaryGeneratedColumn()
+  @Field(() => ID, { description: 'a unique identifier' })
+  id: number;
+
   @PrimaryColumn({ name: 'meal_id' })
   meal_id: number;
 

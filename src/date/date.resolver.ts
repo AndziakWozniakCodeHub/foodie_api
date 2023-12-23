@@ -1,20 +1,23 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Post } from '@nestjs/common';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { DateService } from './date.service';
 import { DateMealUserInput } from './dto/create-meal-date-user.dto';
+import { DateMealUser } from './entities/date-meal-user.entity';
+import { Args, Mutation, Resolver } from '@nestjs/graphql';
 
-@Controller()
+@Resolver(() => DateMealUser)
 @Auth(AuthType.None)
-export class DateController {
+export class DateResolver {
   constructor(private readonly dateService: DateService) {}
 
-  @Post('insertMealsForUserInDate')
+  // @Post('insertMealsForUserInDate')
+  @Mutation(() => DateMealUser)
   async insertMealForUserInDate(
-    @Body() insertMealForUserInDate: DateMealUserInput,
+    @Args('createDateMealUser') createDateMealUser: DateMealUserInput,
   ) {
     return this.dateService.createMealsForUserInParticularDay(
-      insertMealForUserInDate,
+      createDateMealUser,
     );
   }
 }

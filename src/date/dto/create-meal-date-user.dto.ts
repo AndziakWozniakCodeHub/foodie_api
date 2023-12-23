@@ -1,12 +1,19 @@
+import { InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString, MinLength } from 'class-validator';
 
+@InputType()
 export class DateMealUserInput {
-  @ApiProperty()
+  @IsNumber()
   meal_id: number;
-  @ApiProperty()
+
+  @MinLength(3)
+  @IsString()
   date: string;
-  @ApiProperty()
+
+  @IsNumber()
   user_id: number;
-  @ApiProperty()
+
+  @IsNumber()
   occurence: number;
 }
