@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
-import { MealUserDates } from 'src/date/entities/meal-user-date.entity';
+import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 
 @Entity()
 @ObjectType()
@@ -37,14 +37,14 @@ export class User {
   payments: Payment[];
 
   @OneToMany(
-    () => MealUserDates,
-    (mealUserDates: MealUserDates) => mealUserDates.dates,
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.dates,
   )
-  userDates: MealUserDates[];
+  userDates: DateMealUser[];
 
   @OneToMany(
-    () => MealUserDates,
-    (mealUserDates: MealUserDates) => mealUserDates.meals,
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.meals,
   )
-  userMeals: MealUserDates[];
+  userMeals: DateMealUser[];
 }

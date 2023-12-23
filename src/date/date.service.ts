@@ -2,11 +2,11 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { DateEntity } from 'src/date/entities/date.entity';
-import { MealUserDates } from 'src/date/entities/meal-user-date.entity';
+import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DateTime } from 'luxon';
 import { Meal } from 'src/meals/entities/meal.entity';
-import { InsertMealForUserInDateDto } from 'src/meals/dto/create-meal-user-date.input';
+import { DateMealUserInput } from './dto/create-meal-date-user.dto';
 
 @Injectable()
 export class DateService {
@@ -15,14 +15,14 @@ export class DateService {
     private readonly mealsRepository: Repository<Meal>,
     @InjectRepository(DateEntity)
     private readonly datesRepository: Repository<DateEntity>,
-    @InjectRepository(MealUserDates)
-    private readonly mealUserDatesRepository: Repository<MealUserDates>,
+    @InjectRepository(DateMealUser)
+    private readonly dateMealUserRepository: Repository<DateMealUser>,
     @InjectRepository(User)
     private readonly usersRepository: Repository<User>,
   ) {}
 
   async createMealsForUserInParticularDay(
-    insertMealForUserInDateDto: InsertMealForUserInDateDto,
+    insertMealForUserInDateDto: DateMealUserInput,
   ): Promise<void> {
     const meal = await this.mealsRepository.findOneBy({
       id: insertMealForUserInDateDto.meal_id,
@@ -49,8 +49,9 @@ export class DateService {
       meal_id: meal.id,
       date_id: dateFromDatabase.id,
       user_id: user.id,
+      occurence: insertMealForUserInDateDto.occurence,
     };
 
-    await this.mealUserDatesRepository.save(mealForUserInDay);
+    await this.dateMealUserRepository.save(mealForUserInDay);
   }
 }

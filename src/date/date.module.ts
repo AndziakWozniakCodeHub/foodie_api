@@ -5,10 +5,10 @@ import { Meal } from 'src/meals/entities/meal.entity';
 import { DateService } from './date.service';
 import { User } from 'src/users/entities/user.entity';
 import { DateController } from './date.controller';
-import { MealUserDates } from './entities/meal-user-date.entity';
+import { DateMealUser } from './entities/date-meal-user.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([DateEntity, Meal, User, MealUserDates])],
+  imports: [TypeOrmModule.forFeature([DateEntity, Meal, User, DateMealUser])],
   providers: [DateController, DateService],
   controllers: [DateController],
   exports: [DateService],

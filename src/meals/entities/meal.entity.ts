@@ -1,6 +1,6 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
 import { DateEntity } from 'src/date/entities/date.entity';
-import { MealUserDates } from 'src/date/entities/meal-user-date.entity';
+import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
@@ -51,14 +51,14 @@ export class Meal {
   dates?: DateEntity[];
 
   @OneToMany(
-    () => MealUserDates,
-    (mealUserDates: MealUserDates) => mealUserDates.dates,
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.dates,
   )
-  mealDates: MealUserDates[];
+  mealDates: DateMealUser[];
 
   @OneToMany(
-    () => MealUserDates,
-    (mealUserDates: MealUserDates) => mealUserDates.users,
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.users,
   )
-  mealUsers: MealUserDates[];
+  mealUsers: DateMealUser[];
 }

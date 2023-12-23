@@ -1,7 +1,5 @@
-import { InputType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 
-@InputType()
 export class DateMealUserInput {
   @ApiProperty()
   meal_id: number;
@@ -9,4 +7,6 @@ export class DateMealUserInput {
   date: string;
   @ApiProperty()
   user_id: number;
+  @ApiProperty()
+  occurence: number;
 }
