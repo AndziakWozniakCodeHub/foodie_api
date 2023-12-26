@@ -24,7 +24,6 @@ export class DateService {
   async createMealsForUserInParticularDay(
     createMealUserDateInput: DateMealUserInput,
   ) {
-    console.log(createMealUserDateInput);
     const meal = await this.mealsRepository.findOneBy({
       id: createMealUserDateInput.meal_id,
     });
@@ -51,8 +50,46 @@ export class DateService {
       date_id: dateFromDatabase.id,
       user_id: user.id,
       occurence: createMealUserDateInput.occurence,
+      dates: [dateFromDatabase],
     };
     const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
+  }
+
+  async findDateMealsNotPaid(userId: number) {
+    const dateMealsForUser = await this.dateMealUserRepository.find({
+      where: {
+        user_id: userId,
+        // paid: false,
+      },
+      relations: ['dates'],
+    });
+
+    if (!dateMealsForUser) {
+      throw new BadRequestException(
+        `dateMeals were not found for userId: ${userId}`,
+      );
+    }
+
+    console.log(dateMealsForUser);
+
+    // const reducedArray = dateMealsForUser.reduce((accumulator, currentItem) => {
+    //   const existingItem = accumulator.find(
+    //     (item) => item.date_id === currentItem.date_id,
+    //   );
+
+    //   if (existingItem) {
+    //     existingItem.items.push(currentItem);
+    //   } else {
+    //     accumulator.push({
+    //       date_id: currentItem.date_id,
+    //       items: [currentItem],
+    //     });
+    //   }
+
+    //   return accumulator;
+    // }, []);
+
+    return dateMealsForUser;
   }
 }

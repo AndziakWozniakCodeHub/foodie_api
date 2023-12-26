@@ -20,14 +20,6 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-type DateEntity {
-  """a unique identifier"""
-  id: ID!
-  date: DateTime!
-  meals: [Meal!]
-  mealUserDates: [DateMealUser!]
-}
-
 type Meal {
   """a unique identifier"""
   id: ID!
@@ -37,9 +29,15 @@ type Meal {
   description: String!
   imageSource: String!
   users: [User!]!
-  dates: [DateEntity!]
   mealDates: [DateMealUser!]!
   mealUsers: [DateMealUser!]!
+}
+
+type DateEntity {
+  """a unique identifier"""
+  id: ID!
+  date: DateTime!
+  dateMealUsers: [DateMealUser!]!
 }
 
 type DateMealUser {
@@ -89,7 +87,7 @@ type Mutation {
   createMeal(createMealInput: CreateMealInput!): Meal!
   updateMeal(id: Float!, updateMealInput: UpdateMealInput!): Meal!
   removeMeal(id: ID!): Meal!
-  createDateMealUser(createDateMealUser: DateMealUserInput!): DateMealUser!
+  createDateMealUser(createDateMealUserInput: DateMealUserInput!): DateMealUser!
 }
 
 input CreateUserInput {

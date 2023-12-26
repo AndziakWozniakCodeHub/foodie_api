@@ -36,19 +36,19 @@ export class Meal {
   @ManyToMany(() => User)
   users: User[];
 
-  @ManyToMany(() => DateEntity, (dates) => dates.date)
-  @JoinTable({
-    name: 'meal_dates',
-    joinColumn: {
-      name: 'meal_id',
-      referencedColumnName: 'id',
-    },
-    inverseJoinColumn: {
-      name: 'date_id',
-      referencedColumnName: 'id',
-    },
-  })
-  dates?: DateEntity[];
+  // @ManyToMany(() => DateEntity, (dates) => dates.date)
+  // @JoinTable({
+  //   name: 'meal_dates',
+  //   joinColumn: {
+  //     name: 'meal_id',
+  //     referencedColumnName: 'id',
+  //   },
+  //   inverseJoinColumn: {
+  //     name: 'date_id',
+  //     referencedColumnName: 'id',
+  //   },
+  // })
+  // dates?: DateEntity[];
 
   @OneToMany(
     () => DateMealUser,

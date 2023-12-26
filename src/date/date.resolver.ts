@@ -10,11 +10,12 @@ import { Args, Mutation, Resolver } from '@nestjs/graphql';
 export class DateResolver {
   constructor(private readonly dateService: DateService) {}
 
-  // @Post('insertMealsForUserInDate')
   @Mutation(() => DateMealUser)
   async createDateMealUser(
-    @Args('createDateMealUser') createDateMealUser: DateMealUserInput,
+    @Args('createDateMealUserInput') createDateMealUser: DateMealUserInput,
   ) {
+    const a = await this.dateService.findDateMealsNotPaid(1);
+    console.log(a);
     return this.dateService.createMealsForUserInParticularDay(
       createDateMealUser,
     );

@@ -22,7 +22,7 @@ services:
     environment:
       POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
     volumes:
-      - /home/postgres:/var/lib/postgresql/data
+      - /home/postgres/test2:/var/lib/postgresql/data
 
       
   pgadmin:

@@ -3,6 +3,7 @@ import {
   Column,
   Entity,
   JoinColumn,
+  JoinTable,
   ManyToMany,
   ManyToOne,
   PrimaryColumn,
@@ -19,25 +20,25 @@ export class DateMealUser {
   @Field(() => ID, { description: 'a unique identifier' })
   id: number;
 
-  @PrimaryColumn({ name: 'meal_id' })
+  @Column({ name: 'meal_id' })
   meal_id: number;
 
-  @PrimaryColumn({ name: 'date_id' })
+  @Column({ name: 'date_id' })
   date_id: number;
 
-  @PrimaryColumn({ name: 'user_id' })
+  @Column({ name: 'user_id' })
   user_id: number;
 
-  @ManyToOne(() => Meal, (meal) => meal.dates)
-  @JoinColumn([{ name: 'meal_id', referencedColumnName: 'id' }])
+  @ManyToOne(() => Meal, (meal) => meal.id)
   meals: Meal[];
 
-  @ManyToMany(() => DateEntity, (dates) => dates.meals)
-  @JoinColumn([{ name: 'date_id', referencedColumnName: 'id' }])
+  @ManyToMany(() => DateEntity, (dateEntity) => dateEntity.dateMealUsers)
+  @JoinTable({
+    name: 'dates',
+  })
   dates: DateEntity[];
 
   @ManyToOne(() => User, (user) => user.id)
-  @JoinColumn([{ name: 'user_id', referencedColumnName: 'id' }])
   users: User[];
 
   @Column()
