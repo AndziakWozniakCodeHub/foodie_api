@@ -43,6 +43,8 @@ type Meal {
 }
 
 type DateMealUser {
+  """a unique identifier"""
+  id: ID!
   meal_id: Float!
   date_id: Float!
   user_id: Float!
@@ -87,7 +89,7 @@ type Mutation {
   createMeal(createMealInput: CreateMealInput!): Meal!
   updateMeal(id: Float!, updateMealInput: UpdateMealInput!): Meal!
   removeMeal(id: ID!): Meal!
-  insertMealForUserInDate: DateMealUser!
+  createDateMealUser(createDateMealUser: DateMealUserInput!): DateMealUser!
 }
 
 input CreateUserInput {
@@ -116,4 +118,11 @@ input UpdateMealInput {
   title: String
   description: String
   imageSource: String
+}
+
+input DateMealUserInput {
+  meal_id: Float!
+  date: String!
+  user_id: Float!
+  occurence: Float!
 }

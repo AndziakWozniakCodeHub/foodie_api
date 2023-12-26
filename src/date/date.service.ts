@@ -6,7 +6,7 @@ import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DateTime } from 'luxon';
 import { Meal } from 'src/meals/entities/meal.entity';
-import { DateMealUserInput } from './dto/create-meal-date-user.dto';
+import { DateMealUserInput } from './dto/create-meal-date-user.input';
 
 @Injectable()
 export class DateService {
@@ -22,18 +22,19 @@ export class DateService {
   ) {}
 
   async createMealsForUserInParticularDay(
-    insertMealForUserInDateDto: DateMealUserInput,
-  ): Promise<void> {
+    createMealUserDateInput: DateMealUserInput,
+  ) {
+    console.log(createMealUserDateInput);
     const meal = await this.mealsRepository.findOneBy({
-      id: insertMealForUserInDateDto.meal_id,
+      id: createMealUserDateInput.meal_id,
     });
 
     const user = await this.usersRepository.findOneBy({
-      id: insertMealForUserInDateDto.user_id,
+      id: createMealUserDateInput.user_id,
     });
 
     const dateToJs = DateTime.fromFormat(
-      insertMealForUserInDateDto.date,
+      createMealUserDateInput.date,
       'yyyy-MM-dd',
     ).toJSDate();
 
@@ -49,9 +50,9 @@ export class DateService {
       meal_id: meal.id,
       date_id: dateFromDatabase.id,
       user_id: user.id,
-      occurence: insertMealForUserInDateDto.occurence,
+      occurence: createMealUserDateInput.occurence,
     };
     const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
-    await this.dateMealUserRepository.save(dateMealUser);
+    return this.dateMealUserRepository.save(dateMealUser);
   }
 }

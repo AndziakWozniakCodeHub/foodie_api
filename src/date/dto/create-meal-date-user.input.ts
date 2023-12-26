@@ -1,5 +1,4 @@
 import { InputType } from '@nestjs/graphql';
-import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, MinLength } from 'class-validator';
 
 @InputType()
