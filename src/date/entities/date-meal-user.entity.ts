@@ -17,7 +17,7 @@ export class DateMealUser {
   @ManyToOne(() => DateEntity, (dateEntity) => dateEntity.dateMealUsers)
   date: DateEntity;
 
-  @ManyToOne(() => User, (user) => user.id)
+  @ManyToOne(() => User, (user) => user.dateMealUsers)
   user: User;
 
   @Column()

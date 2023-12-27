@@ -59,8 +59,7 @@ type User {
   password: String!
   isEmailConfirmed: Boolean!
   payments: [Payment!]!
-  userDates: [DateMealUser!]!
-  userMeals: [DateMealUser!]!
+  dateMealUsers: [DateMealUser!]!
 }
 
 enum Role {
