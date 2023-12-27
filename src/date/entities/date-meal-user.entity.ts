@@ -23,6 +23,6 @@ export class DateMealUser {
   @Column()
   occurence: number;
 
-  @Column({ nullable: true })
+  @Column()
   paid: boolean;
 }

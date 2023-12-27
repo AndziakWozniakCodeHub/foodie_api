@@ -50,6 +50,7 @@ export class DateService {
       date: dateFromDatabase,
       meal: meal,
       user,
+      paid: false,
     };
     const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
