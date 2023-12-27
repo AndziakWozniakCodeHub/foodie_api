@@ -48,7 +48,7 @@ export class DateService {
     const mealForUserInDay = {
       occurence: createMealUserDateInput.occurence,
       date: dateFromDatabase,
-      meal: meal,
+      meal,
       user,
       paid: false,
     };
@@ -74,25 +74,29 @@ export class DateService {
       );
     }
 
-    console.log(dateMealsForUser);
+    const reducedMealsInDaysForUser = dateMealsForUser.reduce(
+      (accumulator, currentItem) => {
+        const existingItem = accumulator.find((item) => {
+          if (!item.date || !item.date.id) {
+            return false;
+          }
+          return item.date.id === currentItem.date.id;
+        });
 
-    // const reducedArray = dateMealsForUser.reduce((accumulator, currentItem) => {
-    //   const existingItem = accumulator.find(
-    //     (item) => item.date_id === currentItem.date_id,
-    //   );
+        if (existingItem) {
+          existingItem.meals.push(currentItem.meal);
+        } else {
+          accumulator.push({
+            date: currentItem.date,
+            meals: [currentItem.meal],
+          });
+        }
 
-    //   if (existingItem) {
-    //     existingItem.items.push(currentItem);
-    //   } else {
-    //     accumulator.push({
-    //       date_id: currentItem.date_id,
-    //       items: [currentItem],
-    //     });
-    //   }
+        return accumulator;
+      },
+      [],
+    );
 
-    //   return accumulator;
-    // }, []);
-
-    return dateMealsForUser;
+    return reducedMealsInDaysForUser;
   }
 }
