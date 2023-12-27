@@ -25,11 +25,11 @@ export class DateService {
     createMealUserDateInput: DateMealUserInput,
   ) {
     const meal = await this.mealsRepository.findOneBy({
-      id: createMealUserDateInput.meal_id,
+      id: createMealUserDateInput.meal,
     });
 
     const user = await this.usersRepository.findOneBy({
-      id: createMealUserDateInput.user_id,
+      id: createMealUserDateInput.user,
     });
 
     const dateToJs = DateTime.fromFormat(
@@ -46,24 +46,25 @@ export class DateService {
     }
 
     const mealForUserInDay = {
-      meal_id: meal.id,
-      date_id: dateFromDatabase.id,
-      user_id: user.id,
       occurence: createMealUserDateInput.occurence,
-      dates: [dateFromDatabase],
+      date: dateFromDatabase,
       meal: meal,
+      user,
     };
     const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
   }
 
   async findNotPaidDays(userId: number) {
+    const user = await this.usersRepository.findOneBy({
+      id: userId,
+    });
     const dateMealsForUser = await this.dateMealUserRepository.find({
       where: {
-        user_id: userId,
-        // paid: false,
+        user,
+        paid: null,
       },
-      relations: ['dates', 'meal'],
+      relations: ['date', 'meal'],
     });
 
     if (!dateMealsForUser) {

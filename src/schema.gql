@@ -43,13 +43,11 @@ type DateEntity {
 type DateMealUser {
   """a unique identifier"""
   id: ID!
-  meal_id: Float!
-  date_id: Float!
-  user_id: Float!
   meal: Meal!
-  dates: [DateEntity!]!
-  users: [User!]!
+  date: DateEntity!
+  user: User!
   occurence: Float!
+  paid: Boolean!
 }
 
 type User {
@@ -119,8 +117,8 @@ input UpdateMealInput {
 }
 
 input DateMealUserInput {
-  meal_id: Float!
+  meal: Float!
   date: String!
-  user_id: Float!
+  user: Float!
   occurence: Float!
 }

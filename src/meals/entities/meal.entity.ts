@@ -36,7 +36,7 @@ export class Meal {
 
   @OneToMany(
     () => DateMealUser,
-    (mealUserDates: DateMealUser) => mealUserDates.dates,
+    (mealUserDates: DateMealUser) => mealUserDates.date,
   )
   mealDates: DateMealUser[];
 

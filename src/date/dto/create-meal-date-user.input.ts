@@ -4,13 +4,13 @@ import { IsNumber, IsString } from 'class-validator';
 @InputType()
 export class DateMealUserInput {
   @IsNumber()
-  meal_id: number;
+  meal: number;
 
   @IsString()
   date: string;
 
   @IsNumber()
-  user_id: number;
+  user: number;
 
   @IsNumber()
   occurence: number;
