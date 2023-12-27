@@ -14,7 +14,7 @@ export class DateResolver {
   async createDateMealUser(
     @Args('createDateMealUserInput') createDateMealUser: DateMealUserInput,
   ) {
-    const a = await this.dateService.findDateMealsNotPaid(1);
+    const a = await this.dateService.findNotPaidDays(1);
     console.log(a);
     return this.dateService.createMealsForUserInParticularDay(
       createDateMealUser,

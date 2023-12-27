@@ -2,11 +2,9 @@ import { Meal } from 'src/meals/entities/meal.entity';
 import {
   Column,
   Entity,
-  JoinColumn,
   JoinTable,
   ManyToMany,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { DateEntity } from './date.entity';
@@ -29,12 +27,12 @@ export class DateMealUser {
   @Column({ name: 'user_id' })
   user_id: number;
 
-  @ManyToOne(() => Meal, (meal) => meal.id)
-  meals: Meal[];
+  @ManyToOne(() => Meal, (meal) => meal.dateMealUsers)
+  meal: Meal;
 
   @ManyToMany(() => DateEntity, (dateEntity) => dateEntity.dateMealUsers)
   @JoinTable({
-    name: 'dates',
+    name: 'dates_in_date_meal_user',
   })
   dates: DateEntity[];
 

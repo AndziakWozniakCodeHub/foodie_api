@@ -1,11 +1,9 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { DateEntity } from 'src/date/entities/date.entity';
 import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import {
   Column,
   Entity,
-  JoinTable,
   ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
@@ -36,20 +34,6 @@ export class Meal {
   @ManyToMany(() => User)
   users: User[];
 
-  // @ManyToMany(() => DateEntity, (dates) => dates.date)
-  // @JoinTable({
-  //   name: 'meal_dates',
-  //   joinColumn: {
-  //     name: 'meal_id',
-  //     referencedColumnName: 'id',
-  //   },
-  //   inverseJoinColumn: {
-  //     name: 'date_id',
-  //     referencedColumnName: 'id',
-  //   },
-  // })
-  // dates?: DateEntity[];
-
   @OneToMany(
     () => DateMealUser,
     (mealUserDates: DateMealUser) => mealUserDates.dates,
@@ -58,7 +42,7 @@ export class Meal {
 
   @OneToMany(
     () => DateMealUser,
-    (mealUserDates: DateMealUser) => mealUserDates.users,
+    (mealUserDates: DateMealUser) => mealUserDates.meal,
   )
-  mealUsers: DateMealUser[];
+  dateMealUsers: DateMealUser[];
 }

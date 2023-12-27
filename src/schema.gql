@@ -30,7 +30,7 @@ type Meal {
   imageSource: String!
   users: [User!]!
   mealDates: [DateMealUser!]!
-  mealUsers: [DateMealUser!]!
+  dateMealUsers: [DateMealUser!]!
 }
 
 type DateEntity {
@@ -46,7 +46,7 @@ type DateMealUser {
   meal_id: Float!
   date_id: Float!
   user_id: Float!
-  meals: [Meal!]!
+  meal: Meal!
   dates: [DateEntity!]!
   users: [User!]!
   occurence: Float!

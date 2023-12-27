@@ -51,18 +51,19 @@ export class DateService {
       user_id: user.id,
       occurence: createMealUserDateInput.occurence,
       dates: [dateFromDatabase],
+      meal: meal,
     };
     const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
   }
 
-  async findDateMealsNotPaid(userId: number) {
+  async findNotPaidDays(userId: number) {
     const dateMealsForUser = await this.dateMealUserRepository.find({
       where: {
         user_id: userId,
         // paid: false,
       },
-      relations: ['dates'],
+      relations: ['dates', 'meal'],
     });
 
     if (!dateMealsForUser) {

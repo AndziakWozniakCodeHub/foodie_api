@@ -7,7 +7,6 @@ import {
 } from 'typeorm';
 import { Field, ID, ObjectType } from '@nestjs/graphql';
 import { DateMealUser } from './date-meal-user.entity';
-import { Meal } from 'src/meals/entities/meal.entity';
 
 @Entity()
 @ObjectType()
@@ -19,10 +18,7 @@ export class DateEntity {
   @Column()
   date: Date;
 
-  // @ManyToMany(() => Meal, (meal) => meal.dates)
-  // meals?: Meal[];
-
   @ManyToMany(() => DateMealUser, (dateMealUser) => dateMealUser.dates)
-  @JoinTable({ name: 'dates' })
+  @JoinTable({ name: 'dates_in_date_meal_user' })
   dateMealUsers: DateMealUser[];
 }
