@@ -56,10 +56,12 @@ export class DateMealUserService {
     return this.dateMealUserRepository.save(dateMealUser);
   }
 
-  async getDateMealUsersForUserAndDay(userId: number): Promise<DateMealUser[]> {
+  async getDateMealUsersForUserAndDay(
+    userEmail: string,
+  ): Promise<DateMealUser[]> {
     return this.dateMealUserRepository.find({
-      where: { user: { id: userId }, paid: false },
-      relations: ['meal'],
+      where: { user: { email: userEmail }, paid: false },
+      relations: ['meal', 'date'],
     });
   }
 }

@@ -3,7 +3,7 @@ import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { DateMealUserService } from './date-meal-user.service';
 import { DateMealUserInput } from './dto/create-meal-date-user.input';
 import { DateMealUser } from './entities/date-meal-user.entity';
-import { Args, Int, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 @Resolver(() => DateMealUser)
 @Auth(AuthType.None)
@@ -21,8 +21,8 @@ export class DateMealUserResolver {
 
   @Query(() => [DateMealUser], { name: 'mealsInDays' })
   async getDateMealUsersForUserAndDay(
-    @Args('userId', { type: () => Int }) userId: number,
+    @Args('userEmail', { type: () => String }) userEmail: string,
   ) {
-    return this.dateService.getDateMealUsersForUserAndDay(userId);
+    return this.dateService.getDateMealUsersForUserAndDay(userEmail);
   }
 }
