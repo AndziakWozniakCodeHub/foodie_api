@@ -8,7 +8,7 @@ import {
 } from 'typeorm';
 import { Role } from '../enums/role.enum';
 import { Payment } from 'src/payments/entities/payment.entity';
-import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
+import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 
 @Entity()
 @ObjectType()
