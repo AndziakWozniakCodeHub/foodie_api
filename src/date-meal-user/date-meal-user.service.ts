@@ -1,8 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { DateEntity } from 'src/date/entities/date.entity';
-import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
+import { DateEntity } from 'src/date-meal-user/entities/date.entity';
+import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
 import { DateTime } from 'luxon';
 import { Meal } from 'src/meals/entities/meal.entity';
