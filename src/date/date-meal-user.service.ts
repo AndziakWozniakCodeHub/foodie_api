@@ -9,7 +9,7 @@ import { Meal } from 'src/meals/entities/meal.entity';
 import { DateMealUserInput } from './dto/create-meal-date-user.input';
 
 @Injectable()
-export class DateService {
+export class DateMealUserService {
   constructor(
     @InjectRepository(Meal)
     private readonly mealsRepository: Repository<Meal>,
@@ -56,47 +56,10 @@ export class DateService {
     return this.dateMealUserRepository.save(dateMealUser);
   }
 
-  async findNotPaidDays(userId: number) {
-    const user = await this.usersRepository.findOneBy({
-      id: userId,
+  async getDateMealUsersForUserAndDay(userId: number): Promise<DateMealUser[]> {
+    return this.dateMealUserRepository.find({
+      where: { user: { id: userId }, paid: false },
+      relations: ['meal'],
     });
-    const dateMealsForUser = await this.dateMealUserRepository.find({
-      where: {
-        user,
-        paid: null,
-      },
-      relations: ['date', 'meal'],
-    });
-
-    if (!dateMealsForUser) {
-      throw new BadRequestException(
-        `dateMeals were not found for userId: ${userId}`,
-      );
-    }
-
-    const reducedMealsInDaysForUser = dateMealsForUser.reduce(
-      (accumulator, currentItem) => {
-        const existingItem = accumulator.find((item) => {
-          if (!item.date || !item.date.id) {
-            return false;
-          }
-          return item.date.id === currentItem.date.id;
-        });
-
-        if (existingItem) {
-          existingItem.meals.push(currentItem.meal);
-        } else {
-          accumulator.push({
-            date: currentItem.date,
-            meals: [currentItem.meal],
-          });
-        }
-
-        return accumulator;
-      },
-      [],
-    );
-
-    return reducedMealsInDaysForUser;
   }
 }
