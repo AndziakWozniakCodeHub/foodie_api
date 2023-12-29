@@ -1,5 +1,13 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -22,4 +30,19 @@ export class Meal {
 
   @Column()
   imageSource: string;
+
+  @ManyToMany(() => User)
+  users: User[];
+
+  @OneToMany(
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.date,
+  )
+  mealDates: DateMealUser[];
+
+  @OneToMany(
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.meal,
+  )
+  dateMealUsers: DateMealUser[];
 }

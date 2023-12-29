@@ -1,6 +1,14 @@
 import { ObjectType, Field, ID } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  ManyToMany,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { Role } from '../enums/role.enum';
+import { Payment } from 'src/payments/entities/payment.entity';
+import { DateMealUser } from 'src/date/entities/date-meal-user.entity';
 
 @Entity()
 @ObjectType()
@@ -24,4 +32,13 @@ export class User {
 
   @Column({ default: false })
   isEmailConfirmed: boolean;
+
+  @ManyToMany(() => Payment, (payment) => payment.user)
+  payments: Payment[];
+
+  @OneToMany(
+    () => DateMealUser,
+    (mealUserDates: DateMealUser) => mealUserDates.user,
+  )
+  dateMealUsers: DateMealUser[];
 }

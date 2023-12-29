@@ -24,7 +24,7 @@ export class PaymentsResolver {
     return this.paymentService.handleWebhookRequest(req.body, signature);
   }
 
-  @Query(() => [Payment], { name: 'payments' })
+  @Query(() => [Payment], { name: 'paymentsRange' })
   findMany(
     @Args('dateFrom', { type: () => GraphQLISODateTime }) dateFrom: string,
     @Args('dateTo', { type: () => GraphQLISODateTime }) dateTo: string,
@@ -35,5 +35,10 @@ export class PaymentsResolver {
   @Query(() => Payment, { name: 'payment' })
   findOne(@Args('id', { type: () => ID }) id: number) {
     return this.paymentService.findOne(id);
+  }
+
+  @Query(() => [Payment], { name: 'payments' })
+  findAll() {
+    return this.paymentService.findAll();
   }
 }

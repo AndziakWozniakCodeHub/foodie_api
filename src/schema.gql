@@ -2,31 +2,6 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type User {
-  """a unique identifier"""
-  id: ID!
-  role: Role!
-  username: String!
-  email: String!
-  password: String!
-  isEmailConfirmed: Boolean!
-}
-
-enum Role {
-  Regular
-  Admin
-}
-
-type Meal {
-  """a unique identifier"""
-  id: ID!
-  title: String!
-  price: Float!
-  type: String!
-  description: String!
-  imageSource: String!
-}
-
 type Payment {
   """a unique identifier"""
   id: ID!
@@ -37,6 +12,7 @@ type Payment {
   customer_email: String!
   type: String!
   price: Float!
+  user: User!
 }
 
 """
@@ -44,13 +20,62 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+type Meal {
+  """a unique identifier"""
+  id: ID!
+  title: String!
+  price: Float!
+  type: String!
+  description: String!
+  imageSource: String!
+  users: [User!]!
+  mealDates: [DateMealUser!]!
+  dateMealUsers: [DateMealUser!]!
+}
+
+type DateEntity {
+  """a unique identifier"""
+  id: ID!
+  date: DateTime!
+  dateMealUsers: [DateMealUser!]!
+}
+
+type DateMealUser {
+  """a unique identifier"""
+  id: ID!
+  meal: Meal!
+  date: DateEntity!
+  user: User!
+  occurence: Float!
+  paid: Boolean!
+}
+
+type User {
+  """a unique identifier"""
+  id: ID!
+  role: Role!
+  username: String!
+  email: String!
+  password: String!
+  isEmailConfirmed: Boolean!
+  payments: [Payment!]!
+  dateMealUsers: [DateMealUser!]!
+}
+
+enum Role {
+  Regular
+  Admin
+}
+
 type Query {
   users: [User!]!
   user(id: ID!): User!
   meals: [Meal!]!
   meal(id: ID!): Meal!
-  payments(dateFrom: DateTime!, dateTo: DateTime!): [Payment!]!
+  paymentsRange(dateFrom: DateTime!, dateTo: DateTime!): [Payment!]!
   payment(id: ID!): Payment!
+  payments: [Payment!]!
+  mealsInDays(userId: Int!): [DateMealUser!]!
 }
 
 type Mutation {
@@ -60,6 +85,7 @@ type Mutation {
   createMeal(createMealInput: CreateMealInput!): Meal!
   updateMeal(id: Float!, updateMealInput: UpdateMealInput!): Meal!
   removeMeal(id: ID!): Meal!
+  createDateMealUser(createDateMealUserInput: DateMealUserInput!): DateMealUser!
 }
 
 input CreateUserInput {
@@ -88,4 +114,11 @@ input UpdateMealInput {
   title: String
   description: String
   imageSource: String
+}
+
+input DateMealUserInput {
+  meal: Float!
+  date: String!
+  user: Float!
+  occurence: Float!
 }

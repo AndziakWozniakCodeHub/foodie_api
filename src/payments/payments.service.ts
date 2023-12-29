@@ -8,14 +8,19 @@ import { Payment } from './entities/payment.entity';
 import { Between, Repository } from 'typeorm';
 import { CreatePaymentInput } from './dto/create-payment.input';
 import { UserInputError } from '@nestjs/apollo';
+import { User } from 'src/users/entities/user.entity';
+import { DateTime } from 'luxon';
 
 @Injectable()
 export class PaymentsService {
   private readonly stripe: Stripe;
   private configService: ConfigService;
+
   constructor(
     @InjectRepository(Payment)
     private readonly paymentRepository: Repository<Payment>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {
     this.configService = new ConfigService();
     this.stripe = new Stripe(this.configService.get('STRIPE_TEST'), {
@@ -66,8 +71,14 @@ export class PaymentsService {
       customer_email: checkoutDto.email,
       line_items: [
         {
-          price: 'price_1OKnIUF6uGp5IIZlNb4BVNGz',
           quantity: 1,
+          price_data: {
+            currency: 'PLN',
+            unit_amount: checkoutDto.value * 100,
+            product_data: {
+              name: 'Usługi cateringowe',
+            },
+          },
         },
       ],
       mode: 'payment',
@@ -77,27 +88,43 @@ export class PaymentsService {
     return session.url;
   }
 
-  handleWebhookRequest(body: any, signature: any) {
+  async handleWebhookRequest(body: any, signature: any) {
     const secretEndpoint = this.configService.get('STRIPE_WEBHOOK_TEST');
     const event = this.stripe.webhooks.constructEvent(
       body,
       signature,
       secretEndpoint,
     );
-    console.log(event);
+
+    const getUser = async (event: Stripe.CheckoutSessionCompletedEvent) => {
+      const user: User = await this.userRepository.findOneBy({
+        email: event.data.object.customer_email,
+      });
+      return user;
+    };
+
+    const getDate = (event: Stripe.CheckoutSessionCompletedEvent) => {
+      return DateTime.fromSeconds(event.created).toJSDate();
+    };
+
     switch (event.type) {
       case 'checkout.session.completed':
+        event.data.object.customer_email = 'kacperwozniak1996@gmail.com';
+        const user = await getUser(event);
         const createPaymentInput = {
           stripe_id: event.id,
-          created_at: event.created,
+          created_at: getDate(event),
           customer_email: event.data.object.customer_email,
           type: event.type,
           price: event.data.object.amount_total,
+          user: user,
         };
-        this.savePayment(createPaymentInput);
+        try {
+          this.savePayment(createPaymentInput);
+        } catch (error) {
+          console.log(error);
+        }
         break;
-      default:
-        console.log(`Sorry, we are out of event types.`);
     }
   }
 

@@ -1,5 +1,12 @@
 import { ObjectType, Field, ID, GraphQLISODateTime } from '@nestjs/graphql';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { User } from 'src/users/entities/user.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
 @ObjectType()
@@ -23,4 +30,8 @@ export class Payment {
 
   @Column()
   price: number;
+
+  @ManyToOne(() => User, (user) => user.payments)
+  @JoinColumn({ name: 'user_id' })
+  user: User;
 }
