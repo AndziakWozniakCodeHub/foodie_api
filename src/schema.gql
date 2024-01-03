@@ -75,7 +75,7 @@ type Query {
   paymentsRange(dateFrom: DateTime!, dateTo: DateTime!): [Payment!]!
   payment(id: ID!): Payment!
   payments: [Payment!]!
-  mealsInDays(userId: Int!): [DateMealUser!]!
+  mealsInDays(userEmail: String!): [DateMealUser!]!
 }
 
 type Mutation {

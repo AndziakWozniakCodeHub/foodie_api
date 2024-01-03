@@ -1,5 +1,5 @@
 import { Body, Controller, Headers, Post, Req } from '@nestjs/common';
-import { Args, GraphQLISODateTime, ID, Query } from '@nestjs/graphql';
+import { Args, GraphQLISODateTime, ID, Query, Resolver } from '@nestjs/graphql';
 import { PaymentsService } from './payments.service';
 import { Auth } from 'src/iam/authentication/decorators/auth.decorator';
 import { AuthType } from 'src/iam/authentication/enums/auth-type.enum';
@@ -7,6 +7,7 @@ import { CheckoutDto } from './dto/checkout.dto';
 import { Payment } from './entities/payment.entity';
 
 @Controller('payments')
+@Resolver(() => Payment)
 @Auth(AuthType.None)
 export class PaymentsResolver {
   constructor(private paymentService: PaymentsService) {}
