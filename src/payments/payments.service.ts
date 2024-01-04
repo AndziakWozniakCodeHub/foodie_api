@@ -23,7 +23,7 @@ export class PaymentsService {
     private readonly userRepository: Repository<User>,
   ) {
     this.configService = new ConfigService();
-    this.stripe = new Stripe(this.configService.get('STRIPE'), {
+    this.stripe = new Stripe(this.configService.get('STRIPE_TEST'), {
       apiVersion: '2023-10-16',
     });
   }
