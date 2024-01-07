@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { In, Repository } from 'typeorm';
 import { DateEntity } from 'src/date-meal-user/entities/date.entity';
 import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -24,8 +24,8 @@ export class DateMealUserService {
   async createMealsForUserInParticularDay(
     createMealUserDateInput: DateMealUserInput,
   ) {
-    const meal = await this.mealsRepository.findOneBy({
-      id: createMealUserDateInput.meal,
+    const meals = await this.mealsRepository.find({
+      where: { id: In(createMealUserDateInput.meals) },
     });
 
     const user = await this.usersRepository.findOneBy({
@@ -41,18 +41,21 @@ export class DateMealUserService {
       where: { date: dateToJs },
     });
 
-    if (!dateFromDatabase || !meal || !user) {
+    if (!dateFromDatabase || !meals.length || !user) {
       throw new BadRequestException('No meal / user / date found');
     }
 
-    const mealForUserInDay = {
-      occurence: createMealUserDateInput.occurence,
-      date: dateFromDatabase,
-      meal,
-      user,
-      paid: false,
-    };
-    const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
+    const mealsForUserInDay = meals.map((meal) => {
+      return {
+        occurence: 1,
+        date: dateFromDatabase,
+        meal,
+        user,
+        paid: false,
+      };
+    });
+
+    const dateMealUser = this.dateMealUserRepository.create(mealsForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
   }
 

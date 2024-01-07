@@ -10,7 +10,7 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 export class DateMealUserResolver {
   constructor(private readonly dateService: DateMealUserService) {}
 
-  @Mutation(() => DateMealUser)
+  @Mutation(() => [DateMealUser])
   async createDateMealUser(
     @Args('createDateMealUserInput') createDateMealUser: DateMealUserInput,
   ) {

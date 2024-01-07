@@ -1,10 +1,10 @@
 import { InputType } from '@nestjs/graphql';
-import { IsNumber, IsString } from 'class-validator';
+import { IsArray, IsNumber, IsString } from 'class-validator';
 
 @InputType()
 export class DateMealUserInput {
-  @IsNumber()
-  meal: number;
+  @IsArray()
+  meals: number[];
 
   @IsString()
   date: string;
