@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { In, Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { DateEntity } from 'src/date-meal-user/entities/date.entity';
 import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -63,6 +63,26 @@ export class DateMealUserService {
   ): Promise<DateMealUser[]> {
     return this.dateMealUserRepository.find({
       where: { user: { email: userEmail }, paid: false },
+      relations: ['meal', 'date'],
+    });
+  }
+
+  async getDateMealUsersForUserAndDayConstrained({
+    userEmail,
+    dateFrom,
+    dateTo,
+  }: {
+    userEmail: string;
+    dateFrom: string;
+    dateTo: string;
+  }): Promise<DateMealUser[]> {
+    const dateFromDT = DateTime.fromFormat(dateFrom, 'yyyy-MM-dd').toJSDate();
+    const dateToDT = DateTime.fromFormat(dateTo, 'yyyy-MM-dd').toJSDate();
+    return this.dateMealUserRepository.find({
+      where: {
+        user: { email: userEmail },
+        date: { date: Between(dateFromDT, dateToDT) },
+      },
       relations: ['meal', 'date'],
     });
   }

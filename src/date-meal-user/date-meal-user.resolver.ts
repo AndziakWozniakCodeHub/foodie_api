@@ -25,4 +25,17 @@ export class DateMealUserResolver {
   ) {
     return this.dateService.getDateMealUsersForUserAndDay(userEmail);
   }
+
+  @Query(() => [DateMealUser], { name: 'mealsInDaysConstrained' })
+  async getDateMealUsersForUserAndDayConstrained(
+    @Args('userEmail', { type: () => String }) userEmail: string,
+    @Args('dateFrom', { type: () => String }) dateFrom: string,
+    @Args('dateTo', { type: () => String }) dateTo: string,
+  ) {
+    return this.dateService.getDateMealUsersForUserAndDayConstrained({
+      userEmail,
+      dateFrom,
+      dateTo,
+    });
+  }
 }

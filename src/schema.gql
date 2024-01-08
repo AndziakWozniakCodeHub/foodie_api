@@ -76,6 +76,7 @@ type Query {
   payment(id: ID!): Payment!
   payments: [Payment!]!
   mealsInDays(userEmail: String!): [DateMealUser!]!
+  mealsInDaysConstrained(userEmail: String!, dateFrom: String!, dateTo: String!): [DateMealUser!]!
 }
 
 type Mutation {
