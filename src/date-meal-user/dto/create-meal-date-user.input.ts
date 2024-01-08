@@ -9,8 +9,8 @@ export class DateMealUserInput {
   @IsString()
   date: string;
 
-  @IsNumber()
-  user: number;
+  @IsString()
+  userEmail: string;
 
   @IsNumber()
   occurence: number;

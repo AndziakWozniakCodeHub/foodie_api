@@ -119,6 +119,6 @@ input UpdateMealInput {
 input DateMealUserInput {
   meals: [Float!]!
   date: String!
-  user: Float!
+  userEmail: String!
   occurence: Float!
 }

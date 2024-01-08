@@ -29,9 +29,8 @@ export class DateMealUserService {
     });
 
     const user = await this.usersRepository.findOneBy({
-      id: createMealUserDateInput.user,
+      email: createMealUserDateInput.userEmail,
     });
-
     const dateToJs = DateTime.fromFormat(
       createMealUserDateInput.date,
       'yyyy-MM-dd',
