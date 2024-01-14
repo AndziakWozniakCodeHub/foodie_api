@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Between, In, Repository } from 'typeorm';
 import { DateEntity } from 'src/date-meal-user/entities/date.entity';
 import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -24,14 +24,13 @@ export class DateMealUserService {
   async createMealsForUserInParticularDay(
     createMealUserDateInput: DateMealUserInput,
   ) {
-    const meal = await this.mealsRepository.findOneBy({
-      id: createMealUserDateInput.meal,
+    const meals = await this.mealsRepository.find({
+      where: { id: In(createMealUserDateInput.meals) },
     });
 
     const user = await this.usersRepository.findOneBy({
-      id: createMealUserDateInput.user,
+      email: createMealUserDateInput.userEmail,
     });
-
     const dateToJs = DateTime.fromFormat(
       createMealUserDateInput.date,
       'yyyy-MM-dd',
@@ -41,18 +40,26 @@ export class DateMealUserService {
       where: { date: dateToJs },
     });
 
-    if (!dateFromDatabase || !meal || !user) {
+    if (!dateFromDatabase || !meals.length || !user) {
       throw new BadRequestException('No meal / user / date found');
     }
 
-    const mealForUserInDay = {
-      occurence: createMealUserDateInput.occurence,
+    await this.dateMealUserRepository.delete({
       date: dateFromDatabase,
-      meal,
-      user,
-      paid: false,
-    };
-    const dateMealUser = this.dateMealUserRepository.create(mealForUserInDay);
+      user: user,
+    });
+
+    const mealsForUserInDay = meals.map((meal) => {
+      return {
+        occurence: 1,
+        date: dateFromDatabase,
+        meal,
+        user,
+        paid: false,
+      };
+    });
+
+    const dateMealUser = this.dateMealUserRepository.create(mealsForUserInDay);
     return this.dateMealUserRepository.save(dateMealUser);
   }
 
@@ -61,6 +68,26 @@ export class DateMealUserService {
   ): Promise<DateMealUser[]> {
     return this.dateMealUserRepository.find({
       where: { user: { email: userEmail }, paid: false },
+      relations: ['meal', 'date'],
+    });
+  }
+
+  async getDateMealUsersForUserAndDayConstrained({
+    userEmail,
+    dateFrom,
+    dateTo,
+  }: {
+    userEmail: string;
+    dateFrom: string;
+    dateTo: string;
+  }): Promise<DateMealUser[]> {
+    const dateFromDT = DateTime.fromFormat(dateFrom, 'yyyy-MM-dd').toJSDate();
+    const dateToDT = DateTime.fromFormat(dateTo, 'yyyy-MM-dd').toJSDate();
+    return this.dateMealUserRepository.find({
+      where: {
+        user: { email: userEmail },
+        date: { date: Between(dateFromDT, dateToDT) },
+      },
       relations: ['meal', 'date'],
     });
   }
