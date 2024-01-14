@@ -44,6 +44,11 @@ export class DateMealUserService {
       throw new BadRequestException('No meal / user / date found');
     }
 
+    await this.dateMealUserRepository.delete({
+      date: dateFromDatabase,
+      user: user,
+    });
+
     const mealsForUserInDay = meals.map((meal) => {
       return {
         occurence: 1,
