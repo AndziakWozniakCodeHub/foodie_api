@@ -65,22 +65,23 @@ export class PaymentsService {
     return payments;
   }
 
-  async checkout(checkoutDto: CheckoutDto): Promise<string> {
-    const session = await this.stripe.checkout.sessions.create({
-      cancel_url: 'https://innovativy.com/',
-      customer_email: checkoutDto.email,
-      line_items: [
-        {
-          quantity: 1,
-          price_data: {
-            currency: 'PLN',
-            unit_amount: checkoutDto.value * 100,
-            product_data: {
-              name: 'Usługi cateringowe',
-            },
+  async checkout(checkoutDto: CheckoutDto[]): Promise<string> {
+    const lineItems = checkoutDto.map((element) => {
+      return {
+        quantity: 1,
+        price_data: {
+          currency: 'PLN',
+          unit_amount: element.value * 100,
+          product_data: {
+            name: element.date,
           },
         },
-      ],
+      };
+    });
+    const session = await this.stripe.checkout.sessions.create({
+      cancel_url: 'https://innovativy.com/',
+      customer_email: checkoutDto[0].email,
+      line_items: lineItems,
       mode: 'payment',
       payment_method_types: ['blik', 'card', 'p24'],
       success_url: 'https://innovativy.com/',

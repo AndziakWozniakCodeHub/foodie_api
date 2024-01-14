@@ -13,7 +13,7 @@ export class PaymentsResolver {
   constructor(private paymentService: PaymentsService) {}
 
   @Post('checkout')
-  async checkout(@Body() checkoutDto: CheckoutDto) {
+  async checkout(@Body() checkoutDto: CheckoutDto[]) {
     return this.paymentService.checkout(checkoutDto);
   }
 
