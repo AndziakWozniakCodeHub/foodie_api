@@ -1,9 +1,9 @@
 name: build-deploy
 on:
   push:
-    branches: [ "master", "date_meal_user"]
+    branches: [ "master"]
   pull_request:
-    branches: [ "master", "date_meal_user" ]
+    branches: [ "master" ]
 jobs:
   build:
     runs-on: self-hosted
@@ -17,7 +17,7 @@ jobs:
   deploy:
     runs-on: self-hosted
     needs: build
-    # if: github.ref == 'refs/heads/master'
+    if: github.ref == 'refs/heads/master'
     steps:
     - name: Clone repository 
       uses: actions/checkout@v4
