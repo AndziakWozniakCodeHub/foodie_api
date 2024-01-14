@@ -10,6 +10,7 @@ import { CreatePaymentInput } from './dto/create-payment.input';
 import { UserInputError } from '@nestjs/apollo';
 import { User } from 'src/users/entities/user.entity';
 import { DateTime } from 'luxon';
+import { DateMealUser } from 'src/date-meal-user/entities/date-meal-user.entity';
 
 @Injectable()
 export class PaymentsService {
@@ -21,6 +22,8 @@ export class PaymentsService {
     private readonly paymentRepository: Repository<Payment>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(DateMealUser)
+    private readonly dateMealUserRepository: Repository<DateMealUser>,
   ) {
     this.configService = new ConfigService();
     this.stripe = new Stripe(this.configService.get('STRIPE_TEST'), {
@@ -78,10 +81,16 @@ export class PaymentsService {
         },
       };
     });
+    const dates = checkoutDto.map((el) => {
+      return {
+        date: el.date,
+      };
+    });
     const session = await this.stripe.checkout.sessions.create({
       cancel_url: 'https://innovativy.com/',
       customer_email: checkoutDto[0].email,
       line_items: lineItems,
+      metadata: { dates: dates.join(',') },
       mode: 'payment',
       payment_method_types: ['blik', 'card', 'p24'],
       success_url: 'https://innovativy.com/',
@@ -96,7 +105,6 @@ export class PaymentsService {
       signature,
       secretEndpoint,
     );
-
     const getUser = async (event: Stripe.CheckoutSessionCompletedEvent) => {
       const user: User = await this.userRepository.findOneBy({
         email: event.data.object.customer_email,
@@ -110,6 +118,9 @@ export class PaymentsService {
 
     switch (event.type) {
       case 'checkout.session.completed':
+        const dates = event.data.object.metadata.dates
+          ? event.data.object.metadata.dates
+          : '2023-01-16';
         event.data.object.customer_email = 'kacperwozniak1996@gmail.com';
         const user = await getUser(event);
         const createPaymentInput = {
@@ -119,13 +130,15 @@ export class PaymentsService {
           type: event.type,
           price: event.data.object.amount_total,
           user: user,
+          dates,
         };
-        try {
-          this.savePayment(createPaymentInput);
-        } catch (error) {
-          console.log(error);
-        }
-        break;
+        this.savePayment(createPaymentInput);
+        await this.dateMealUserRepository
+          .createQueryBuilder()
+          .update(DateMealUser)
+          .set({ paid: true })
+          .where('date IN (:...dates)', { dates: dates.split(',') })
+          .execute();
     }
   }
 

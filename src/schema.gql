@@ -12,6 +12,7 @@ type Payment {
   customer_email: String!
   type: String!
   price: Float!
+  dates: String!
   user: User!
 }
 

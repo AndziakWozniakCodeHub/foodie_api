@@ -31,6 +31,9 @@ export class Payment {
   @Column()
   price: number;
 
+  @Column()
+  dates: string;
+
   @ManyToOne(() => User, (user) => user.payments)
   @JoinColumn({ name: 'user_id' })
   user: User;

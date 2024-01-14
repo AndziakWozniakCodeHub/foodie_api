@@ -21,4 +21,6 @@ export class CreatePaymentInput {
 
   // @IsNumber()
   user: User;
+
+  dates: string;
 }
