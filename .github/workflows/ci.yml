@@ -1,9 +1,9 @@
 name: build-deploy
 on:
   push:
-    branches: [ "master" ]
+    branches: [ "master", "date_meal_user"]
   pull_request:
-    branches: [ "master", "test" ]
+    branches: [ "master", "date_meal_user" ]
 jobs:
   build:
     runs-on: self-hosted
